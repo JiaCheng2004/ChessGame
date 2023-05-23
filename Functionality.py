@@ -1,7 +1,15 @@
 class GamePiece:
 
+    def __init__(self):
+        self.King = ((0,1),(0,-1),(1,0),(-1,0),(1,1),(1,-1),(-1,-1),(-1,1))
+        self.Queen = ((0,1),(0,-1),(1,0),(-1,0),(1,1),(1,-1),(-1,-1),(-1,1))
+        self.Knight = ((1,2),(-1,2),(2,1),(2,-1),(2,1),(-2,1),(-2,-1),(-1,-2),(1,-2))
+        self.Bishop = ((1,1),(1,-1),(-1,1),(-1,-1))
+        self.Rook = ((1,0),(-1,0),(0,1),(0,-1))
+        self.Pawn = ((0,1),(0,2),(1,1),(-1,1))
+
     def king(self):
-        return ['up','down','left','right','up-right','up-left','down-right','down-left']
+        return None
     
     def queen(self):
         return None
