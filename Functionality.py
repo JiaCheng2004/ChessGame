@@ -1,29 +1,39 @@
-class GamePiece:
+class GamePiece():
 
-    def __init__(self):
-        self.King = ((0,1),(0,-1),(1,0),(-1,0),(1,1),(1,-1),(-1,-1),(-1,1))
-        self.Queen = ((0,1),(0,-1),(1,0),(-1,0),(1,1),(1,-1),(-1,-1),(-1,1))
-        self.Knight = ((1,2),(-1,2),(2,1),(2,-1),(2,1),(-2,1),(-2,-1),(-1,-2),(1,-2))
-        self.Bishop = ((1,1),(1,-1),(-1,1),(-1,-1))
-        self.Rook = ((1,0),(-1,0),(0,1),(0,-1))
-        self.Pawn = ((0,1),(0,2),(1,1),(-1,1))
+    def __init__(self, owner, piece):
 
-    def king(self):
-        return None
+        self.piece_movements = {
+         'king' : ((0,1),(0,-1),(1,0),(-1,0),(1,1),(1,-1),(-1,-1),(-1,1)),              # King
+         'queen' : ((0,1),(0,-1),(1,0),(-1,0),(1,1),(1,-1),(-1,-1),(-1,1)),             # Queen
+         'knight' : ((1,2),(-1,2),(2,1),(2,-1),(2,1),(-2,1),(-2,-1),(-1,-2),(1,-2)),    # Knight
+         'bishop' : ((1,1),(1,-1),(-1,1),(-1,-1)),                                      # Bishop
+         'rook' : ((1,0),(-1,0),(0,1),(0,-1)),                                          # Rook
+         'pawn' : (((0,1)),((0,2)),((1,1),(-1,1)))                                            # Pawn
+         }
+        
+        self.moves = self.piece_movements[piece.lower()]
+        self.piece = piece
+        self.owner = owner
+        
+        
+        
+
+    # def king(self):
+    #     return None
     
-    def queen(self):
-        return None
+    # def queen(self):
+    #     return None
     
-    def bishop(self):
-        return None
+    # def bishop(self):
+    #     return None
     
-    def rook(self):
-        return None
+    # def rook(self):
+    #     return None
     
-    def knight(self):
-        return None
+    # def knight(self):
+    #     return None
     
-    def pawn(self):
-        return None
+    # def pawn(self):
+    #     return None
     
     # NEED MORE EDIT **DETAILS**
