@@ -84,3 +84,8 @@ class Player:
     
     def is_bot(self):
         return self.bot
+    
+class AI:
+
+    def __init__(self, difficulty):
+        pass

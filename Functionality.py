@@ -1,6 +1,6 @@
 class GamePiece():
 
-    def __init__(self, name, piece):
+    def __init__(self, owner, piece):
 
         self.piece_movements = {
          'king' : ((0,1),(0,-1),(1,0),(-1,0),(1,1),(1,-1),(-1,-1),(-1,1)),              # King
@@ -8,11 +8,12 @@ class GamePiece():
          'knight' : ((1,2),(-1,2),(2,1),(2,-1),(2,1),(-2,1),(-2,-1),(-1,-2),(1,-2)),    # Knight
          'bishop' : ((1,1),(1,-1),(-1,1),(-1,-1)),                                      # Bishop
          'rook' : ((1,0),(-1,0),(0,1),(0,-1)),                                          # Rook
-         'pawn' : ((0,1),(0,2),(1,1),(-1,1))                                            # Pawn
+         'pawn' : (((0,1)),((0,2)),((1,1),(-1,1)))                                            # Pawn
          }
         
         self.moves = self.piece_movements[piece.lower()]
-        self.name = name
+        self.piece = piece
+        self.owner = owner
         
         
         
