@@ -1,12 +1,15 @@
 from Functionality import GamePiece
+from Player import *
 from colorfont import *
 
 class Board:
     
     def __init__(self, player1, player2):
+        self.player1 = player1
+        self.player2 = player2
         self.board = [
-                [["A1", GamePiece(player1, 'rook'), Red('R')], ["A2", GamePiece(player1, 'knight'), Red('H')], ["A3", GamePiece(player1, 'bishop'), Red('B')], ["A4", GamePiece(player1, 'queen'), Red('Q')], ["A5", GamePiece(player1, 'king'), Red('K')], ["A6", GamePiece(player1, 'bishop'), Red('B')], ["A7", GamePiece(player1, 'knight'), Red('H')], ["A8", GamePiece(player1, 'rook'), Red('R')]],
-                [["B1", GamePiece(player1, 'pawn'), Red('P')], ["B2", GamePiece(player1, 'pawn'), Red('P')], ["B3", GamePiece(player1, 'pawn'), Red('P')], ["B4", GamePiece(player1, 'pawn'), Red('P')], ["B5", GamePiece(player1, 'pawn'), Red('P')], ["B6", GamePiece(player1, 'pawn'), Red('P')], ["B7", GamePiece(player1, 'pawn'), Red('P')], ["B8", GamePiece(player1, 'pawn'), Red('P')]],
+                [["A1", GamePiece(player1, 'rook'), Blue('R')], ["A2", GamePiece(player1, 'knight'), Blue('H')], ["A3", GamePiece(player1, 'bishop'), Blue('B')], ["A4", GamePiece(player1, 'queen'), Blue('Q')], ["A5", GamePiece(player1, 'king'), Blue('K')], ["A6", GamePiece(player1, 'bishop'), Blue('B')], ["A7", GamePiece(player1, 'knight'), Blue('H')], ["A8", GamePiece(player1, 'rook'), Blue('R')]],
+                [["B1", GamePiece(player1, 'pawn'), Blue('P')], ["B2", GamePiece(player1, 'pawn'), Blue('P')], ["B3", GamePiece(player1, 'pawn'), Blue('P')], ["B4", GamePiece(player1, 'pawn'), Blue('P')], ["B5", GamePiece(player1, 'pawn'), Blue('P')], ["B6", GamePiece(player1, 'pawn'), Blue('P')], ["B7", GamePiece(player1, 'pawn'), Blue('P')], ["B8", GamePiece(player1, 'pawn'), Blue('P')]],
                 [["C1", None, ' '], ["C2", None, ' '], ["C3", None, ' '], ["C4", None, ' '], ["C5", None, ' '], ["C6", None, ' '], ["C7", None, ' '], ["C8", None, ' ']],
                 [["D1", None, ' '], ["D2", None, ' '], ["D3", None, ' '], ["D4", None, ' '], ["D5", None, ' '], ["D6", None, ' '], ["D7", None, ' '], ["D8", None, ' ']],
                 [["E1", None, ' '], ["E2", None, ' '], ["E3", None, ' '], ["E4", None, ' '], ["E5", None, ' '], ["E6", None, ' '], ["E7", None, ' '], ["E8", None, ' ']],
@@ -15,14 +18,40 @@ class Board:
                 [["H1", GamePiece(player2, 'rook'), Green('R')], ["H2", GamePiece(player2, 'knight'), Green('H')], ["H3", GamePiece(player2, 'bishop'), Green('B')], ["H4", GamePiece(player2, 'queen'), Green('Q')], ["H5", GamePiece(player2, 'king'), Green('K')], ["H6", GamePiece(player2, 'bishop'), Green('B')], ["H7", GamePiece(player2, 'knight'), Green('H')], ["H8", GamePiece(player2, 'rook'), Green('R')]]
                 ]
 
-        self.input_options = (("A", "B", "C", "D", "E", "F", "G", "H"),('1', '2', '3', '4', '5', '6', '7', '8'))
+        self.input_options = (("A", "B", "C", "D", "E", "F", "G", "H"), ('1', '2', '3', '4', '5', '6', '7', '8'))
 
-    def retrieve_move(self, phrase, p = None):
-        if p == 'move':
+    def retrieve_move(self, phrase, p = None, *, retriver = None, position = None):
+        if p == 's':
             while True:
                 response = input(phrase).upper()
-                if len(response) == 2 and self.valid_move(response):
-                    return response
+                if len(response) != 2 or not self.valid_move(response):
+                    print(Red("Invalid input![A-H, 1-8]"))
+                    continue
+                elif len(response) == 2 and self.valid_move(response):
+                    if self.locate(response)[1] is None:
+                        print(Red("You can't select a blank space."))
+                        continue
+                    elif self.locate(response)[1].owner != retriver:
+                        print(Red("Please only pick your own game piece."))
+                        continue
+                    else:
+                        return response
+                continue
+        
+        elif p == 'd':
+            available_moves = self.avaliable_moves(position.upper())
+            while True:
+                response = input(phrase).upper()
+                if response.lower() in ['undo','cancel']:
+                    self.unshow_avaliable_moves(available_moves, False)
+                    return None
+                if len(response) != 2 or not self.valid_move(response):
+                    print(Red("Invalid input![A-H, 1-8]"))
+                    continue
+                if response not in available_moves:
+                    print(Red("You can't move there."))
+                    continue
+                else: return response
         
     def valid_move(self, move):
         return True if (move[0] in self.input_options[0]) and (move[1] in self.input_options[1]) else False
@@ -76,6 +105,27 @@ class Board:
             return self.rook_moves(tag, alph_index, num_index)
         elif tag.piece == 'pawn':
             return self.pawn_moves(tag, alph_index, num_index)
+        
+    def show_avaliable_moves(self, locations):
+        for location in locations:
+            square = self.locate(location)
+            if square[2] == ' ':
+                square[2] = Yellow('*')
+            else:
+                square[2] = Yellow(square[2][5])
+        self.print_board()
+
+    def unshow_avaliable_moves(self, locations, color = True): # True is Green, False is Blue
+        for location in locations:
+            square = self.locate(location)
+            if square[2] == Yellow('*'):
+                square[2] = ' '
+            else:
+                if color:
+                    square[2] = Green(square[2][5])
+                else:
+                    square[2] = Blue(square[2][5])
+        self.print_board()
 
     def knight_moves(self, tag, alph_index, num_index):
         avaliable = []
@@ -85,7 +135,6 @@ class Board:
             if self.in_bounds(alph, num) and (self.piece_owner_index(alph, num) != tag.owner):
                 avaliable.append(self.index_to_string(alph, num))
         
-        print(avaliable)
         return avaliable
 
     def bishop_moves(self, tag, alph_index, num_index):
@@ -94,7 +143,6 @@ class Board:
         for alph, num in tag.moves:
             avaliable.extend(self.swing(tag, alph_index, num_index, alph, num))
         
-        print(avaliable)
         return avaliable
 
     def rook_moves(self, tag, alph_index, num_index):
@@ -103,7 +151,6 @@ class Board:
         for alph, num in tag.moves:
             avaliable.extend(self.swing(tag, alph_index, num_index, alph, num))
         
-        print(avaliable)
         return avaliable
 
     def queen_moves(self, tag, alph_index, num_index):
@@ -112,7 +159,6 @@ class Board:
         for alph, num in tag.moves:
             avaliable.extend(self.swing(tag, alph_index, num_index, alph, num))
         
-        print(avaliable)
         return avaliable
 
     def king_moves(self, tag, alph_index, num_index, casteling = True):
@@ -123,35 +169,38 @@ class Board:
             if self.in_bounds(alph, num) and (self.piece_owner_index(alph, num) != tag.owner):
                 avaliable.append(self.index_to_string(alph, num))
 
-        print(avaliable)
         return avaliable
 
-    def pawn_moves(self, tag, alph_index, num_index, start = False):
+    def pawn_moves(self, tag, alph_index, num_index, start = True):
         avaliable = []
         if start:
             for alph, num in tag.moves[2]:
+                if tag.owner == self.player2: alph *= -1
                 alph, num = alph_index+alph, num_index+num
                 if self.in_bounds(alph, num) and (self.piece_owner_index(alph, num) not in [tag.owner, None]):
                     avaliable.append(self.index_to_string(alph, num))
             for alph, num in tag.moves[1]:
+                if tag.owner == self.player2: alph *= -1
                 alph, num = alph_index+alph, num_index+num
                 if self.in_bounds(alph, num) and (self.piece_owner_index(alph, num) is None):
                     avaliable.append(self.index_to_string(alph, num))
             for alph, num in tag.moves[0]:
+                if tag.owner == self.player2: alph *= -1
                 alph, num = alph_index+alph, num_index+num
                 if self.in_bounds(alph, num) and (self.piece_owner_index(alph, num) is None):
                     avaliable.append(self.index_to_string(alph, num))
         else:
             for alph, num in tag.moves[2]:
+                if tag.owner == self.player2: alph *= -1
                 alph, num = alph_index+alph, num_index+num
                 if self.in_bounds(alph, num) and (self.piece_owner_index(alph, num) not in [tag.owner, None]):
                     avaliable.append(self.index_to_string(alph, num))
             for alph, num in tag.moves[0]:
+                if tag.owner == self.player2: alph *= -1
                 alph, num = alph_index+alph, num_index+num
                 if self.in_bounds(alph, num) and (self.piece_owner_index(alph, num) is None):
                     avaliable.append(self.index_to_string(alph, num))
         
-        print(avaliable)
         return avaliable
 
     def swing(self, tag, alph_index, num_index, alph_movement, num_movement):
@@ -190,6 +239,9 @@ if __name__ == '__main__':
     Game = Board('Alex', 'John')
     while True:
         Game.print_board()
-        origin, destination = Game.retrieve_move('Select you want to move: ', p = 'move'), Game.retrieve_move('Move it to: ', p = 'move')
+        origin = Game.retrieve_move('Select you want to move: ', p = 's', retriver='John')
+        destination = Game.retrieve_move('Move it to: ', p = 'd', position=origin)
         Game.move(origin, destination)
-        Game.avaliable_moves(destination)
+        Game.print_board()
+        ask = input()
+        Game.unshow_avaliable_moves(Game.avaliable_moves(destination), False)
