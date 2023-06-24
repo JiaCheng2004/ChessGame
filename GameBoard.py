@@ -190,6 +190,6 @@ if __name__ == '__main__':
     Game = Board('Alex', 'John')
     while True:
         Game.print_board()
-        origin, destination = Game.retrieve_move('Choose which piece you want to move: ', p = 'move'), Game.retrieve_move('Move it to: ', p = 'move')
+        origin, destination = Game.retrieve_move('Select you want to move: ', p = 'move'), Game.retrieve_move('Move it to: ', p = 'move')
         Game.move(origin, destination)
         Game.avaliable_moves(destination)
