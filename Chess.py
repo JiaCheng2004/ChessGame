@@ -1,8 +1,6 @@
-import os
-import collections
-import pygame
 import GameBoard
 import colorfont as cf
+import random
 
 class Match:
     def __init__(self, Player1, Player2):
@@ -12,30 +10,38 @@ class Match:
 
     def start(self, player = True): # True -> P2 , False -> P1
         self.Board.print_board()
-        if player:
-            while True:
-                selected = self.Board.retrieve_move(cf.Green(f'{self.player1}, Please select a game piece: '), p = 's', retriver = self.player2)
-                available = self.Board.avaliable_moves(selected)
-                self.Board.show_avaliable_moves(available)
-                destination = self.Board.retrieve_move(cf.Green(f'{self.player1}, Please select a destination: '), p = 'd', retriver = self.player2, position = selected)
-                if destination is None:
-                    continue
-                self.Board.move(selected, destination)
-                self.Board.unshow_avaliable_moves(available)
-                break
-            self.start(False)
+        over = self.Board.gameover()
+        if not over[0]:
+            if player:
+                while True:
+                    selected = self.Board.retrieve_move(cf.Green(f'{self.player1}, Please select a game piece: '), p = 's', retriver = self.player2)
+                    available = self.Board.avaliable_moves(selected)
+                    self.Board.show_avaliable_moves(available)
+                    self.Board.print_board()
+                    destination = self.Board.retrieve_move(cf.Green(f'{self.player1}, Please select a destination: '), p = 'd', retriver = self.player2, position = selected)
+                    if destination is None:
+                        continue
+                    self.Board.move(selected, destination)
+                    self.Board.unshow_avaliable_moves(available)
+                    break
+                self.start(False)
+            else:
+                while True:
+                    self.Board.print_board()
+                    selected = self.Board.retrieve_move(cf.Blue(f'{self.player2}, Please select a game piece: '), p = 's', retriver = self.player1)
+                    available = self.Board.avaliable_moves(selected)
+                    self.Board.show_avaliable_moves(available)
+                    self.Board.print_board()
+                    destination = self.Board.retrieve_move(cf.Blue(f'{self.player2}, Please select a destination: '), p = 'd', retriver = self.player1, position = selected)
+                    if destination is None:
+                        continue
+                    self.Board.move(selected, destination)
+                    self.Board.unshow_avaliable_moves(available)
+                    break
+                self.start(True)
         else:
-            while True:
-                selected = self.Board.retrieve_move(cf.Blue(f'{self.player1}, Please select a game piece: '), p = 's', retriver = self.player1)
-                available = self.Board.avaliable_moves(selected)
-                self.Board.show_avaliable_moves(available)
-                destination = self.Board.retrieve_move(cf.Blue(f'{self.player1}, Please select a destination: '), p = 'd', retriver = self.player1, position = selected)
-                if destination is None:
-                    continue
-                self.Board.move(selected, destination)
-                self.Board.unshow_avaliable_moves(available, False)
-                break
-            self.start(True)
+            print(f"Congratulation! {over[1]} won!!")
+
 
 def player_names(phrase):
     while True:
@@ -49,6 +55,9 @@ def player_names(phrase):
                 print(cf.Red("Try again! Name can only contain alphabets."))
             else:
                 return name[0].upper() + name[1:].lower()
+            
+def generate():
+    return random.choice(["A", "B", "C", "D", "E", "F", "G", "H"]) + random.choice(['1', '2', '3', '4', '5', '6', '7', '8'])
 
 if __name__ == '__main__':
     # Event = Match(player_names('Enter name: '), player_names('Enter name: '))
