@@ -6,8 +6,8 @@ import random
 class Board:
     
     def __init__(self, player1, player2):
-        self.player1 = player1
-        self.player2 = player2
+        self.player1 = Player(player1)
+        self.player2 = Player(player2)
         self.board = [
                 [["A1", GamePiece(player1, 'rook'), Blue('R')], ["A2", GamePiece(player1, 'knight'), Blue('H')], ["A3", GamePiece(player1, 'bishop'), Blue('B')], ["A4", GamePiece(player1, 'queen'), Blue('Q')], ["A5", GamePiece(player1, 'king'), Blue('K')], ["A6", GamePiece(player1, 'bishop'), Blue('B')], ["A7", GamePiece(player1, 'knight'), Blue('H')], ["A8", GamePiece(player1, 'rook'), Blue('R')]],
                 [["B1", GamePiece(player1, 'pawn'), Blue('P')], ["B2", GamePiece(player1, 'pawn'), Blue('P')], ["B3", GamePiece(player1, 'pawn'), Blue('P')], ["B4", GamePiece(player1, 'pawn'), Blue('P')], ["B5", GamePiece(player1, 'pawn'), Blue('P')], ["B6", GamePiece(player1, 'pawn'), Blue('P')], ["B7", GamePiece(player1, 'pawn'), Blue('P')], ["B8", GamePiece(player1, 'pawn'), Blue('P')]],
@@ -71,9 +71,9 @@ class Board:
         piece2 = self.locate(destination)[1]
         if piece.piece == 'pawn':
             piece.moved = True
-            if piece.owner == self.player1 and destination[0] == 'H':
+            if piece.owner == self.player1.name and destination[0] == 'H':
                 piece, piece_letter = GamePiece(self.player1, 'queen'), Blue('Q')
-            elif piece.owner == self.player2 and destination[0] == 'A':
+            elif piece.owner == self.player2.name and destination[0] == 'A':
                 piece, piece_letter = GamePiece(self.player2, 'queen'), Green('Q')
         elif piece is not None and piece2 is not None:
             if (piece.piece == 'king') and (piece2.piece == 'rook') and (piece.owner == piece2.owner):
@@ -99,8 +99,43 @@ class Board:
     def index_to_string(self, alph, num):
         return chr(alph+ord('A')) + str(num+1)
     
-    def check(self):
-        return  '''!!!!!!!!!!!!!!!!!!!!!!!!  NOT IMPLEMENTED  !!!!!!!!!!!!!!!!!!!!!!!!'''
+    def find_pieces(self, player, piece_name):
+        piece = []
+        for row in range(len(self.board)):
+            for square in range(len(self.board[row])):
+                if self.board[row][square][1] is None:
+                    continue 
+                elif self.board[row][square][1].owner == player.name and self.board[row][square][1].piece == piece_name:
+                    piece.append(self.index_to_string(row, square))
+        return piece
+    
+    def is_checked(self, player):
+        if player == self.player1.name:
+            king_location = self.find_pieces(self.player2, 'king')[0]
+            for piece in self.player2.piece_collection:
+                pieces_location = self.find_pieces(self.player1, piece)
+                if len(pieces_location) == 0: 
+                    self.player1.piece_collection.remove(piece)
+                    continue
+                for location in pieces_location:
+                    print(location, self.avaliable_moves(location), king_location)
+                    if king_location in self.avaliable_moves(location):
+                        return True
+        else:
+            king_location = self.find_pieces(self.player1, 'king')[0]
+            for piece in self.player1.piece_collection:
+                pieces_location = self.find_pieces(self.player2, piece)
+                if len(pieces_location) == 0: 
+                    self.player2.piece_collection.remove(piece)
+                    continue
+                for location in pieces_location:
+                    print(location, self.avaliable_moves(location), king_location)
+                    if king_location in self.avaliable_moves(location):
+                        return True
+        return False
+    
+    def is_checkmate(self, player):
+        return None
     
     def gameover(self):
         p1, p2 = False, False
@@ -109,9 +144,9 @@ class Board:
                 if square[1] is None:
                     continue
                 if square[1].piece == 'king':
-                    if square[1].owner == self.player1:
+                    if square[1].owner == self.player1.name:
                         p1 = True
-                    elif square[1].owner == self.player2:
+                    elif square[1].owner == self.player2.name:
                         p2 = True
         if p1 and p2:
             return False, None
@@ -169,7 +204,7 @@ class Board:
             if square[2] == Yellow('*'):
                 square[2] = ' '
             elif square[2] != ' ':
-                if square[1].owner == self.player1:
+                if square[1].owner == self.player1.name:
                     square[2] = Blue(square[1].letter)
                 else:
                     square[2] = Green(square[1].letter)
@@ -212,7 +247,7 @@ class Board:
         avaliable = []
 
         if not tag.moved:
-            if tag.owner == self.player1:
+            if tag.owner == self.player1.name:
                 rook1, rook2 = self.locate('A1')[1], self.locate('A8')[1]
                 if not rook1.moved:
                     if all([self.locate(location)[1] is None for location in self.castle_checker[0]]):
@@ -220,7 +255,7 @@ class Board:
                 if not rook2.moved:
                     if all([self.locate(location)[1] is None for location in self.castle_checker[1]]):
                         avaliable.append('A8')
-            elif tag.owner == self.player2:
+            elif tag.owner == self.player2.name:
                 rook3, rook4 = self.locate('H1')[1], self.locate('H8')[1]
                 if not rook3.moved:
                     if all([self.locate(location)[1] is None for location in self.castle_checker[2]]):
@@ -240,28 +275,28 @@ class Board:
         avaliable = []
         if start:
             for alph, num in tag.moves[2]:
-                if tag.owner == self.player2: alph *= -1
+                if tag.owner == self.player2.name: alph *= -1
                 alph, num = alph_index+alph, num_index+num
                 if self.in_bounds(alph, num) and (self.piece_owner_index(alph, num) not in [tag.owner, None]):
                     avaliable.append(self.index_to_string(alph, num))
             for alph, num in tag.moves[1]:
-                if tag.owner == self.player2: alph *= -1
+                if tag.owner == self.player2.name: alph *= -1
                 alph, num = alph_index+alph, num_index+num
                 if self.in_bounds(alph, num) and (self.piece_owner_index(alph, num) is None):
                     avaliable.append(self.index_to_string(alph, num))
             for alph, num in tag.moves[0]:
-                if tag.owner == self.player2: alph *= -1
+                if tag.owner == self.player2.name: alph *= -1
                 alph, num = alph_index+alph, num_index+num
                 if self.in_bounds(alph, num) and (self.piece_owner_index(alph, num) is None):
                     avaliable.append(self.index_to_string(alph, num))
         else:
             for alph, num in tag.moves[2]:
-                if tag.owner == self.player2: alph *= -1
+                if tag.owner == self.player2.name: alph *= -1
                 alph, num = alph_index+alph, num_index+num
                 if self.in_bounds(alph, num) and (self.piece_owner_index(alph, num) not in [tag.owner, None]):
                     avaliable.append(self.index_to_string(alph, num))
             for alph, num in tag.moves[0]:
-                if tag.owner == self.player2: alph *= -1
+                if tag.owner == self.player2.name: alph *= -1
                 alph, num = alph_index+alph, num_index+num
                 if self.in_bounds(alph, num) and (self.piece_owner_index(alph, num) is None):
                     avaliable.append(self.index_to_string(alph, num))

@@ -1,130 +1,55 @@
-# import random
-# from Functionality import GamePiece
+import random
+from Functionality import GamePiece
 
+class Player:
+    def __init__(self, name):
+        self.name = name
+        self.bot = False
+        self.piece_count = 16
+        self.piece_collection = ['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']
 
-# # 从聪明到简单 100 - 0
-# bot_choices = {
-#     'Albert': 100,
-#     'Simon' : 97,
-#     'Richard' : 97,
-#     'Jack' : 94,
-#     'Thomas' : 91, 
-#     'William' : 87,
-#     'Matthew' : 84,
-#     'Charles' : 81,
-#     'Daniel' : 78,
-#     'Joshua' : 75,
-#     'Adam': 72,
-#     'Edward' : 69,
-#     'Luke' : 66,
-#     'Jacob' : 63,
-#     'Christopher': 60,
-#     'James' : 57,
-#     'Timothy' : 54,
-#     'Steven ' : 51,
-#     'Robert' : 48,
-#     'Leonard' : 45,
-#     'Stanley' : 42,
-#     'Lawrence' : 39,
-#     'Philip' : 36,
-#     'Julia' : 33,
-#     'Eddie': 30,
-#     'Tommy' :27,
-#     'Pete' : 24,
-#     'Jason' : 21,
-#     'Jackson' : 18,
-#     'Leo' : 15,
-#     'Nicholas' : 12,
-#     'Arthur' : 9,
-#     'Hugo' : 6,
-#     'Nathan': 3,
-#     'Anthony' : 0,
-#     }
-
-# # 玩家Class
-
-# class Player:
-#     def __init__(self, name = random.choice(bot_choices), bot = True):
-#         self.name = name
-#         self.bot = False
-        
-#         # self.棋子[ True/False(是否还有这个棋子)  ,  棋子的机动性]
-#         self.king = [True, GamePiece.king]
-#         self.queen = [True, GamePiece.queen]
-#         self.knight_1 = [True, GamePiece.knight]
-#         self.knight_2 = [True, GamePiece.knight]
-#         self.bishop_1 = [True, GamePiece.bishop]
-#         self.bishop_2 = [True, GamePiece.bishop]
-#         self.rook_1 = [True, GamePiece.rook]
-#         self.rook_2 = [True, GamePiece.rook]
-#         self.pawn_1 = [True, GamePiece.pawn]
-#         self.pawn_2 = [True, GamePiece.pawn]
-#         self.pawn_3 = [True, GamePiece.pawn]
-#         self.pawn_4 = [True, GamePiece.pawn]
-#         self.pawn_5 = [True, GamePiece.pawn]
-#         self.pawn_6 = [True, GamePiece.pawn]
-#         self.pawn_7 = [True, GamePiece.pawn]
-#         self.pawn_8 = [True, GamePiece.pawn]
-
-#         # 所有的棋子状态 (collection)
-#         self.collection_status = [ self.king, self.queen,
-#                                     self.knight_1, self.knight_2,
-#                                     self.bishop_1, self.bishop_2,
-#                                     self.rook_1, self.rook_2,
-#                                     self.pawn_1, self.pawn_2,
-#                                     self.pawn_3, self.pawn_4,
-#                                     self.pawn_5, self.pawn_6,
-#                                     self.pawn_7, self.pawn_8 ]
-
-#     def won(self):
-#         return all(self.collection_status)
+    def won(self):
+        return all(self.collection_status)
     
-#     def winner_name(self):
-#         return self.name
+    def winner_name(self):
+        return self.name
     
-#     def is_bot(self):
-#         return self.bot
+    def is_bot(self):
+        return self.bot
     
 class AI:
 
-    def __init__(self, difficulty):
-        # 从聪明到简单 100 - 0
-        bot_choices = {
-            'Albert': 100,
-            'Simon' : 97,
-            'Richard' : 97,
-            'Jack' : 94,
-            'Thomas' : 91, 
-            'William' : 87,
-            'Matthew' : 84,
-            'Charles' : 81,
-            'Daniel' : 78,
-            'Joshua' : 75,
-            'Adam': 72,
-            'Edward' : 69,
-            'Luke' : 66,
-            'Jacob' : 63,
-            'Christopher': 60,
-            'James' : 57,
-            'Timothy' : 54,
-            'Steven ' : 51,
-            'Robert' : 48,
-            'Leonard' : 45,
-            'Stanley' : 42,
-            'Lawrence' : 39,
-            'Philip' : 36,
-            'Julia' : 33,
-            'Eddie': 30,
-            'Tommy' :27,
-            'Pete' : 24,
-            'Jason' : 21,
-            'Jackson' : 18,
-            'Leo' : 15,
-            'Nicholas' : 12,
-            'Arthur' : 9,
-            'Hugo' : 6,
-            'Nathan': 3,
-            'Anthony' : 0,
-            }
+    def __init__(self, difficulty = None):
+        # difficulty:
+            # Beginner   0 - 19
+            # Easy      20 - 39
+            # Normal    40 - 59
+            # Advanced  60 - 79
+            # Master    80 - 100
 
-        # 玩家Class
+        # Complex to S1mple 100 - 0
+        self.bot_choices = (('Stacey', 100, 37),('Simon' , 97, 36), ('Richard' , 97, 35), ('Jack' , 94, 34), ('Thomas' , 91, 33), ('William' , 87, 32), ('Matthew' , 84, 31), ('Charles' , 81, 30), 
+            ('Daniel' , 78, 29),('Joshua' , 75, 28), ('Adam', 72, 27), ('Edward' , 69, 26), ('Luke' , 66, 25), ('Jacob' , 63, 24), ('Christopher', 60, 23), ('James', 57, 22), ('Timothy', 54, 21), 
+            ('Steven ', 51, 20),('Robert', 48, 19), ('Leonard', 45, 18), ('Stanley', 42, 17), ('Lawrence', 39, 16), ('Philip', 36, 15), ('Julia', 33, 14), ('Eddie', 30, 13), ('Tommy', 27, 12), 
+            ('Pete', 24, 11), ('Jason', 21, 10), ('Jackson', 18, 9), ('Leo', 15, 8), ('Nicholas', 12, 7), ('Arthur', 9, 6), ('Hugo', 6, 5), ('Nathan', 3, 4), ('Anthony', 0, 3))
+        
+        if difficulty is None:
+            self.name, self.complexity, self.depth = random.choice(self.bot_choices)
+        elif difficulty == 'beginner': # Beginner   0 - 19
+            self.name, self.complexity, self.depth = random.choice(self.bot_choices)[:8]
+        elif difficulty == 'easy':     # Easy      20 - 39
+            self.name, self.complexity, self.depth = random.choice(self.bot_choices)[8:15]
+        elif difficulty == 'normal':   # Normal    40 - 59
+            self.name, self.complexity, self.depth = random.choice(self.bot_choices)[15:21]
+        elif difficulty == 'advanced': # Advanced  60 - 79
+            self.name, self.complexity, self.depth = random.choice(self.bot_choices)[21:28]
+        elif difficulty == 'master':   # Master    80 - 100
+            self.name, self.complexity, self.depth = random.choice(self.bot_choices)[28:]
+
+        self.bot = True
+        self.piece_count = 16
+        self.piece_collection = ('king', 'queen', 'rook', 'bishop', 'knight', 'pawn')
+
+    def get_move(self, board, depth, pov = True,): # True -> player1, False -> player2
+        if pov:
+            pass 

@@ -8,12 +8,14 @@ class Match:
         self.player2 = Player2
         self.Board = GameBoard.Board(self.player1, self.player2)
 
-    def start(self, player = True): # True -> P2 , False -> P1
+    def start(self, player = True):
         self.Board.print_board()
         over = self.Board.gameover()
         if not over[0]:
             if player:
                 while True:
+                    if self.Board.is_checked(self.player1):
+                        print(f"Watch out {self.player1}! You're checked!")
                     selected = self.Board.retrieve_move(cf.Green(f'{self.player1}, Please select a game piece: '), p = 's', retriver = self.player2)
                     available = self.Board.avaliable_moves(selected)
                     self.Board.show_avaliable_moves(available)
@@ -27,7 +29,8 @@ class Match:
                 self.start(False)
             else:
                 while True:
-                    self.Board.print_board()
+                    if self.Board.is_checked(self.player2):
+                        print(f"Watch out {self.player2}! You're checked!")
                     selected = self.Board.retrieve_move(cf.Blue(f'{self.player2}, Please select a game piece: '), p = 's', retriver = self.player1)
                     available = self.Board.avaliable_moves(selected)
                     self.Board.show_avaliable_moves(available)
@@ -40,7 +43,7 @@ class Match:
                     break
                 self.start(True)
         else:
-            print(f"Congratulation! {over[1]} won!!")
+            print(f"Congratulation! {over[1].name} won!!")
 
 
 def player_names(phrase):
