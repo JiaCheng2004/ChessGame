@@ -1,12 +1,13 @@
 from Functionality import GamePiece
 from Player import *
 from colorfont import *
+import random
 
 class Board:
     
     def __init__(self, player1, player2):
-        self.player1 = player1
-        self.player2 = player2
+        self.player1 = Player(player1)
+        self.player2 = Player(player2)
         self.board = [
                 [["A1", GamePiece(player1, 'rook'), Blue('R')], ["A2", GamePiece(player1, 'knight'), Blue('H')], ["A3", GamePiece(player1, 'bishop'), Blue('B')], ["A4", GamePiece(player1, 'queen'), Blue('Q')], ["A5", GamePiece(player1, 'king'), Blue('K')], ["A6", GamePiece(player1, 'bishop'), Blue('B')], ["A7", GamePiece(player1, 'knight'), Blue('H')], ["A8", GamePiece(player1, 'rook'), Blue('R')]],
                 [["B1", GamePiece(player1, 'pawn'), Blue('P')], ["B2", GamePiece(player1, 'pawn'), Blue('P')], ["B3", GamePiece(player1, 'pawn'), Blue('P')], ["B4", GamePiece(player1, 'pawn'), Blue('P')], ["B5", GamePiece(player1, 'pawn'), Blue('P')], ["B6", GamePiece(player1, 'pawn'), Blue('P')], ["B7", GamePiece(player1, 'pawn'), Blue('P')], ["B8", GamePiece(player1, 'pawn'), Blue('P')]],
@@ -19,6 +20,8 @@ class Board:
                 ]
 
         self.input_options = (("A", "B", "C", "D", "E", "F", "G", "H"), ('1', '2', '3', '4', '5', '6', '7', '8'))
+        self.castle_checker = [['A2','A3','A4'], ['A6','A7'], ['H2','H3','H4'], ['H6','H7']]
+        self.castle_position = {('A5','A1'): ['A3','A4'], ('A5','A8'): ['A7','A6'], ('H5','H1'): ['H3','H4'], ('H5','H8'): ['H7','H6']}
 
     def retrieve_move(self, phrase, p = None, *, retriver = None, position = None):
         if p == 's':
@@ -35,7 +38,11 @@ class Board:
                         print(Red("Please only pick your own game piece."))
                         continue
                     else:
-                        return response
+                        if len(self.avaliable_moves(response.upper())) != 0:
+                            return response
+                        else:
+                            print(Red("This piece can't move anywhere."))
+                            continue
                 continue
         
         elif p == 'd':
@@ -43,7 +50,8 @@ class Board:
             while True:
                 response = input(phrase).upper()
                 if response.lower() in ['undo','cancel']:
-                    self.unshow_avaliable_moves(available_moves, False)
+                    self.unshow_avaliable_moves(available_moves)
+                    self.print_board()
                     return None
                 if len(response) != 2 or not self.valid_move(response):
                     print(Red("Invalid input![A-H, 1-8]"))
@@ -51,13 +59,27 @@ class Board:
                 if response not in available_moves:
                     print(Red("You can't move there."))
                     continue
-                else: return response
+                else: 
+                    self.unshow_avaliable_moves(available_moves)
+                    return response
         
     def valid_move(self, move):
         return True if (move[0] in self.input_options[0]) and (move[1] in self.input_options[1]) else False
 
     def move(self, origin , destination):
         piece, piece_letter = self.locate(origin)[1:]
+        piece2 = self.locate(destination)[1]
+        if piece.piece == 'pawn':
+            piece.moved = True
+            if piece.owner == self.player1.name and destination[0] == 'H':
+                piece, piece_letter = GamePiece(self.player1, 'queen'), Blue('Q')
+            elif piece.owner == self.player2.name and destination[0] == 'A':
+                piece, piece_letter = GamePiece(self.player2, 'queen'), Green('Q')
+        elif piece is not None and piece2 is not None:
+            if (piece.piece == 'king') and (piece2.piece == 'rook') and (piece.owner == piece2.owner):
+                self.castle(origin, destination)
+                piece.moved, piece2.moved = True, True
+                return
         self.locate(origin)[1:] = None, ' '
         self.locate(destination)[1:] = piece, piece_letter
         return
@@ -68,14 +90,73 @@ class Board:
     def locate(self, location):
         return self.board[ord(location[0].upper())-ord('A')][int(location[1])-1]
     
+    def index_locate(self, alph, num):
+        return self.board[alph][num]
+    
     def string_to_index(self, location):
         return ord(location[0].upper())-ord('A'), int(location[1])-1
     
     def index_to_string(self, alph, num):
         return chr(alph+ord('A')) + str(num+1)
     
-    def game_over(self):
-        pass
+    def find_pieces(self, player, piece_name):
+        piece = []
+        for row in range(len(self.board)):
+            for square in range(len(self.board[row])):
+                if self.board[row][square][1] is None:
+                    continue 
+                elif self.board[row][square][1].owner == player.name and self.board[row][square][1].piece == piece_name:
+                    piece.append(self.index_to_string(row, square))
+        return piece
+    
+    def is_checked(self, player):
+        if player == self.player1.name:
+            king_location = self.find_pieces(self.player2, 'king')[0]
+            for piece in self.player2.piece_collection:
+                pieces_location = self.find_pieces(self.player1, piece)
+                if len(pieces_location) == 0: 
+                    self.player1.piece_collection.remove(piece)
+                    continue
+                for location in pieces_location:
+                    print(location, self.avaliable_moves(location), king_location)
+                    if king_location in self.avaliable_moves(location):
+                        return True
+        else:
+            king_location = self.find_pieces(self.player1, 'king')[0]
+            for piece in self.player1.piece_collection:
+                pieces_location = self.find_pieces(self.player2, piece)
+                if len(pieces_location) == 0: 
+                    self.player2.piece_collection.remove(piece)
+                    continue
+                for location in pieces_location:
+                    print(location, self.avaliable_moves(location), king_location)
+                    if king_location in self.avaliable_moves(location):
+                        return True
+        return False
+    
+    def is_checkmate(self, player):
+        return None
+    
+    def gameover(self):
+        p1, p2 = False, False
+        for row in self.board:
+            for square in row:
+                if square[1] is None:
+                    continue
+                if square[1].piece == 'king':
+                    if square[1].owner == self.player1.name:
+                        p1 = True
+                    elif square[1].owner == self.player2.name:
+                        p2 = True
+        if p1 and p2:
+            return False, None
+        elif p1:
+            return True, self.player1
+        elif p2:
+            return True, self.player2
+
+    def generate(self):
+        return random.choice(["A", "B", "C", "D", "E", "F", "G", "H"]) + random.choice(['1', '2', '3', '4', '5', '6', '7', '8'])
     
     def piece_owner_str(self, location):
         return None if self.locate(location)[1] is None else self.locate(location)[1].owner
@@ -104,7 +185,10 @@ class Board:
         elif tag.piece == 'rook':
             return self.rook_moves(tag, alph_index, num_index)
         elif tag.piece == 'pawn':
-            return self.pawn_moves(tag, alph_index, num_index)
+            if tag.moved == False:
+                return self.pawn_moves(tag, alph_index, num_index)
+            else:
+                return self.pawn_moves(tag, alph_index, num_index, start = False)
         
     def show_avaliable_moves(self, locations):
         for location in locations:
@@ -112,20 +196,18 @@ class Board:
             if square[2] == ' ':
                 square[2] = Yellow('*')
             else:
-                square[2] = Yellow(square[2][5])
-        self.print_board()
+                square[2] = Yellow(square[1].letter)
 
-    def unshow_avaliable_moves(self, locations, color = True): # True is Green, False is Blue
+    def unshow_avaliable_moves(self, locations): # True is Green, False is Blue
         for location in locations:
             square = self.locate(location)
             if square[2] == Yellow('*'):
                 square[2] = ' '
-            else:
-                if color:
-                    square[2] = Green(square[2][5])
+            elif square[2] != ' ':
+                if square[1].owner == self.player1.name:
+                    square[2] = Blue(square[1].letter)
                 else:
-                    square[2] = Blue(square[2][5])
-        self.print_board()
+                    square[2] = Green(square[1].letter)
 
     def knight_moves(self, tag, alph_index, num_index):
         avaliable = []
@@ -161,9 +243,27 @@ class Board:
         
         return avaliable
 
-    def king_moves(self, tag, alph_index, num_index, casteling = True):
+    def king_moves(self, tag, alph_index, num_index):
         avaliable = []
-        
+
+        if not tag.moved:
+            if tag.owner == self.player1.name:
+                rook1, rook2 = self.locate('A1')[1], self.locate('A8')[1]
+                if not rook1.moved:
+                    if all([self.locate(location)[1] is None for location in self.castle_checker[0]]):
+                        avaliable.append('A1') 
+                if not rook2.moved:
+                    if all([self.locate(location)[1] is None for location in self.castle_checker[1]]):
+                        avaliable.append('A8')
+            elif tag.owner == self.player2.name:
+                rook3, rook4 = self.locate('H1')[1], self.locate('H8')[1]
+                if not rook3.moved:
+                    if all([self.locate(location)[1] is None for location in self.castle_checker[2]]):
+                        avaliable.append('H1') 
+                if not rook4.moved:
+                    if all([self.locate(location)[1] is None for location in self.castle_checker[3]]):
+                        avaliable.append('H8')
+
         for alph, num in tag.moves:
             alph, num = alph_index+alph, num_index+num
             if self.in_bounds(alph, num) and (self.piece_owner_index(alph, num) != tag.owner):
@@ -175,33 +275,46 @@ class Board:
         avaliable = []
         if start:
             for alph, num in tag.moves[2]:
-                if tag.owner == self.player2: alph *= -1
+                if tag.owner == self.player2.name: alph *= -1
                 alph, num = alph_index+alph, num_index+num
                 if self.in_bounds(alph, num) and (self.piece_owner_index(alph, num) not in [tag.owner, None]):
                     avaliable.append(self.index_to_string(alph, num))
             for alph, num in tag.moves[1]:
-                if tag.owner == self.player2: alph *= -1
+                if tag.owner == self.player2.name: alph *= -1
                 alph, num = alph_index+alph, num_index+num
                 if self.in_bounds(alph, num) and (self.piece_owner_index(alph, num) is None):
                     avaliable.append(self.index_to_string(alph, num))
             for alph, num in tag.moves[0]:
-                if tag.owner == self.player2: alph *= -1
+                if tag.owner == self.player2.name: alph *= -1
                 alph, num = alph_index+alph, num_index+num
                 if self.in_bounds(alph, num) and (self.piece_owner_index(alph, num) is None):
                     avaliable.append(self.index_to_string(alph, num))
         else:
             for alph, num in tag.moves[2]:
-                if tag.owner == self.player2: alph *= -1
+                if tag.owner == self.player2.name: alph *= -1
                 alph, num = alph_index+alph, num_index+num
                 if self.in_bounds(alph, num) and (self.piece_owner_index(alph, num) not in [tag.owner, None]):
                     avaliable.append(self.index_to_string(alph, num))
             for alph, num in tag.moves[0]:
-                if tag.owner == self.player2: alph *= -1
+                if tag.owner == self.player2.name: alph *= -1
                 alph, num = alph_index+alph, num_index+num
                 if self.in_bounds(alph, num) and (self.piece_owner_index(alph, num) is None):
                     avaliable.append(self.index_to_string(alph, num))
         
         return avaliable
+    
+    def castle(self, king_origin, rook_origin):
+        king_destination, rook_destination = self.castle_position[(king_origin, rook_origin)]
+
+        king, king_letter = self.locate(king_origin)[1:]
+        self.locate(king_origin)[1:] = None, ' '
+        self.locate(king_destination)[1:] = king, king_letter
+
+        rook, rook_letter = self.locate(rook_origin)[1:]
+        self.locate(rook_origin)[1:] = None, ' '
+        self.locate(rook_destination)[1:] = rook, rook_letter
+
+        return
 
     def swing(self, tag, alph_index, num_index, alph_movement, num_movement):
         alph, num = alph_index + alph_movement, num_index + num_movement
@@ -236,12 +349,4 @@ H | {self.board[7][0][2]} | {self.board[7][1][2]} | {self.board[7][2][2]} | {sel
   +---+---+---+---+---+---+---+---+''')
 
 if __name__ == '__main__':
-    Game = Board('Alex', 'John')
-    while True:
-        Game.print_board()
-        origin = Game.retrieve_move('Select you want to move: ', p = 's', retriver='John')
-        destination = Game.retrieve_move('Move it to: ', p = 'd', position=origin)
-        Game.move(origin, destination)
-        Game.print_board()
-        ask = input()
-        Game.unshow_avaliable_moves(Game.avaliable_moves(destination), False)
+    print(Red('Go to Chess.py'))
