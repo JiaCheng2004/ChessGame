@@ -22,7 +22,7 @@ class Board:
         self.input_options = (("A", "B", "C", "D", "E", "F", "G", "H"), ('1', '2', '3', '4', '5', '6', '7', '8'))
         self.castle_checker = [['A2','A3','A4'], ['A6','A7'], ['H2','H3','H4'], ['H6','H7']]
         self.castle_position = {('A5','A1'): ['A3','A4'], ('A5','A8'): ['A7','A6'], ('H5','H1'): ['H3','H4'], ('H5','H8'): ['H7','H6']}
-
+        
     def retrieve_move(self, phrase, p = None, *, retriver = None, position = None):
         if p == 's':
             while True:
@@ -83,7 +83,7 @@ class Board:
         self.locate(origin)[1:] = None, ' '
         self.locate(destination)[1:] = piece, piece_letter
         return
-
+    
     def return_board_status(self):
         return self.board
     
@@ -109,33 +109,54 @@ class Board:
                     piece.append(self.index_to_string(row, square))
         return piece
     
-    def is_checked(self, player):
-        if player == self.player1.name:
-            king_location = self.find_pieces(self.player2, 'king')[0]
-            for piece in self.player2.piece_collection:
-                pieces_location = self.find_pieces(self.player1, piece)
-                if len(pieces_location) == 0: 
-                    self.player1.piece_collection.remove(piece)
-                    continue
-                for location in pieces_location:
-                    print(location, self.avaliable_moves(location), king_location)
-                    if king_location in self.avaliable_moves(location):
-                        return True
+    def find_all_pieces(self, player):
+        piece = []
+        for row in range(len(self.board)):
+            for square in range(len(self.board[row])):
+                if self.board[row][square][1] is None:
+                    continue 
+                elif self.board[row][square][1].owner == player.name:
+                    piece.append(self.index_to_string(row, square))
+        return piece
+    
+    def is_checked(self, check_player):
+        if check_player == self.player1.name:
+            player = self.player1
+            opponent = self.player2
         else:
-            king_location = self.find_pieces(self.player1, 'king')[0]
-            for piece in self.player1.piece_collection:
-                pieces_location = self.find_pieces(self.player2, piece)
-                if len(pieces_location) == 0: 
-                    self.player2.piece_collection.remove(piece)
-                    continue
-                for location in pieces_location:
-                    print(location, self.avaliable_moves(location), king_location)
-                    if king_location in self.avaliable_moves(location):
-                        return True
+            player = self.player2
+            opponent = self.player1
+            
+        king_location = self.find_pieces(player, 'king')[0]
+        pieces_location = self.find_all_pieces(opponent)
+        for location in pieces_location:
+            if king_location in self.avaliable_moves(location):
+                return location
         return False
     
-    def is_checkmate(self, player):
-        return None
+    def is_checkmate(self, check_player):
+        player = self.player1 if check_player == self.player1.name else self.player2
+        
+        player_pieces = self.find_all_pieces(player)
+        
+        for location in player_pieces:
+            for next_move in self.avaliable_moves(location):
+
+                piece, piece_letter = self.locate(location)[1:]
+                piece2, piece_letter2 = self.locate(next_move)[1:]
+                self.locate(location)[1:] = None, ' '
+                self.locate(next_move)[1:] = piece, piece_letter
+
+                if self.is_checked(player.name):
+                    self.locate(next_move)[1:] = piece2, piece_letter2
+                    self.locate(location)[1:] = piece, piece_letter
+                    continue
+                else:
+                    self.locate(next_move)[1:] = piece2, piece_letter2
+                    self.locate(location)[1:] = piece, piece_letter
+                    return False
+            
+        return True
     
     def gameover(self):
         p1, p2 = False, False
@@ -249,20 +270,24 @@ class Board:
         if not tag.moved:
             if tag.owner == self.player1.name:
                 rook1, rook2 = self.locate('A1')[1], self.locate('A8')[1]
-                if not rook1.moved:
-                    if all([self.locate(location)[1] is None for location in self.castle_checker[0]]):
-                        avaliable.append('A1') 
-                if not rook2.moved:
-                    if all([self.locate(location)[1] is None for location in self.castle_checker[1]]):
-                        avaliable.append('A8')
+                if rook1 != None:
+                    if not rook1.moved:
+                        if all([self.locate(location)[1] is None for location in self.castle_checker[0]]):
+                            avaliable.append('A1') 
+                if rook2 != None:
+                    if not rook2.moved:
+                        if all([self.locate(location)[1] is None for location in self.castle_checker[1]]):
+                            avaliable.append('A8')
             elif tag.owner == self.player2.name:
                 rook3, rook4 = self.locate('H1')[1], self.locate('H8')[1]
-                if not rook3.moved:
-                    if all([self.locate(location)[1] is None for location in self.castle_checker[2]]):
-                        avaliable.append('H1') 
-                if not rook4.moved:
-                    if all([self.locate(location)[1] is None for location in self.castle_checker[3]]):
-                        avaliable.append('H8')
+                if rook3 != None:
+                    if not rook3.moved:
+                        if all([self.locate(location)[1] is None for location in self.castle_checker[2]]):
+                            avaliable.append('H1') 
+                if rook4 != None:
+                    if not rook4.moved:
+                        if all([self.locate(location)[1] is None for location in self.castle_checker[3]]):
+                            avaliable.append('H8')
 
         for alph, num in tag.moves:
             alph, num = alph_index+alph, num_index+num
