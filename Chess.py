@@ -5,7 +5,7 @@ import Player
 
 class Match:
     def __init__(self, Player1, Player2):
-        self.player1 = Player.AI('beginner')
+        self.player1 = Player.AI('custom')
         self.player2 = Player.Player(Player2)
         self.Board = GameBoard.Board(self.player1, self.player2)
 

@@ -77,6 +77,8 @@ class AI:
             self.name, self.complexity, self.depth = random.choice(self.bot_choices)[21:28]
         elif difficulty == 'master':   # Master    80 - 100
             self.name, self.complexity, self.depth = random.choice(self.bot_choices)[28:]
+        elif difficulty == 'custom': 
+            self.name, self.complexity, self.depth = ('TEST', 1, 4)
 
         self.bot = True
         self.piece_count = 39
