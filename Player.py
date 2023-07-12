@@ -1,5 +1,6 @@
 import random
 from Functionality import GamePiece
+from colorfont import *
 
 class Player:
     def __init__(self, name):
@@ -7,6 +8,46 @@ class Player:
         self.bot = False
         self.piece_value = 39
         self.piece_collection = ['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']
+
+    def retrieve_move(self, p = None, *, retriver = None, position = None):
+        if p == 's':
+            while True:
+                response = input(Blue(f'{self.player1}, Please select a game piece: ')).upper()
+                if len(response) != 2 or not self.valid_move(response):
+                    print(Red("Invalid input![A-H, 1-8]"))
+                    continue
+                elif len(response) == 2 and self.valid_move(response):
+                    if self.locate(response)[1] is None:
+                        print(Red("You can't select a blank space."))
+                        continue
+                    elif self.locate(response)[1].owner != retriver:
+                        print(Red("Please only pick your own game piece."))
+                        continue
+                    else:
+                        if len(self.avaliable_moves(response.upper())) != 0:
+                            return response
+                        else:
+                            print(Red("This piece can't move anywhere."))
+                            continue
+                continue
+        
+        elif p == 'd':
+            available_moves = self.avaliable_moves(position.upper())
+            while True:
+                response = input(f'{self.player1}, Please select a destination: ').upper()
+                if response.lower() in ['undo','cancel']:
+                    self.unshow_avaliable_moves(available_moves)
+                    self.print_board()
+                    return None
+                if len(response) != 2 or not self.valid_move(response):
+                    print(Red("Invalid input![A-H, 1-8]"))
+                    continue
+                if response not in available_moves:
+                    print(Red("You can't move there."))
+                    continue
+                else: 
+                    self.unshow_avaliable_moves(available_moves)
+                    return response
     
 class AI:
 
@@ -41,14 +82,77 @@ class AI:
         self.piece_count = 39
         self.piece_collection = ('king', 'queen', 'rook', 'bishop', 'knight', 'pawn')
 
-    def get_move(self, board, depth, pov = True): # True -> player1, MAXIMIZING, False -> player2, MINIMIZING
-        piece_value = {
+        print(f"Name: {self.name}\nComplexity: {self.complexity}\nHardness: {self.depth}")
+
+    def get_move(self, board, pov = True): # True -> player1, MAXIMIZING, False -> player2, MINIMIZING
+        value_map = {
             "pawn": 1.0, 
             "bishop": 3.0,
+            "knight": 3.0,
             "rook": 5.0,
             "queen": 9.0,
             "king": float('inf')
         }
+        score_1, score_2 = board.player1.piece_value, board.player2.piece_value
 
-        if pov:
-            board.player1
+        best_move, best_move_value = None, -float('inf')
+
+        for piece_location in board.find_all_pieces(board.player1):
+            for next_move in board.avaliable_moves(piece_location):
+                piece, piece_letter = board.locate(piece_location)[1:]
+                piece2, piece_letter2  = board.locate(next_move)[1:]
+                board.locate(piece_location)[1:] = None, ' '
+                board.locate(next_move)[1:] = piece, piece_letter
+
+                if piece2 is not None:
+                    if pov:
+                        board.player1.piece_value += value_map[piece2.piece]
+                        board.player2.piece_value -= value_map[piece2.piece]
+                    else:
+                        board.player1.piece_value -= value_map[piece2.piece]
+                        board.player2.piece_value += value_map[piece2.piece]
+
+                self.minimax(board, self.depth-1, value_map, False)
+                
+                if board.player1.piece_value > best_move_value:
+                    best_move, best_move_value = (piece_location, next_move), board.player1.piece_value
+
+                board.locate(next_move)[1:] = piece2, piece_letter2
+                board.locate(piece_location)[1:] = piece, piece_letter
+                board.player1.piece_value, board.player2.piece_value = score_1, score_2
+                
+        return best_move
+    
+    def minimax(self, board, depth, value_map, pov):
+        board.print_board()
+        pov = False if pov else True
+
+        if pov: player, opponent = board.player1, board.player2
+        else: player, opponent = board.player2, board.player1
+        finish = board.gameover()
+
+        score_1, score_2 = board.player1.piece_value, board.player2.piece_value
+
+        if depth == 0 or finish[0]:
+            if finish[1] == board.player1:
+                board.player1.piece_value += float('inf') 
+            else: 
+                board.player2.piece_value += float('inf')
+            return
+
+        for piece_location in board.find_all_pieces(player):
+            for next_move in board.avaliable_moves(piece_location):
+                piece, piece_letter = board.locate(piece_location)[1:]
+                piece2, piece_letter2 = board.locate(next_move)[1:]
+                board.locate(piece_location)[1:] = None, ' '
+                board.locate(next_move)[1:] = piece, piece_letter
+                if piece2 is not None:
+                    player.piece_value += value_map[piece2.piece]
+                    opponent.piece_value -= value_map[piece2.piece]
+
+                self.minimax(board, depth-1, value_map, pov)
+
+                board.locate(next_move)[1:] = piece2, piece_letter2
+                board.locate(piece_location)[1:] = piece, piece_letter
+                board.player1.piece_value, board.player2.piece_value = score_1, score_2
+        return
