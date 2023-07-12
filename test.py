@@ -1,3 +1,4 @@
+
 class ListNode:
     def __init__(self, val=0, next=None):
         self.val = val
@@ -16,3 +17,6 @@ while True:
         head.val == head.next
     else:
         head.val == head.next
+x, y = 2
+print(x,y)
+print(range([1][0]))
