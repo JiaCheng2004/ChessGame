@@ -5,17 +5,8 @@ class Player:
     def __init__(self, name):
         self.name = name
         self.bot = False
-        self.piece_count = 16
+        self.piece_value = 39
         self.piece_collection = ['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']
-
-    def won(self):
-        return all(self.collection_status)
-    
-    def winner_name(self):
-        return self.name
-    
-    def is_bot(self):
-        return self.bot
     
 class AI:
 
@@ -47,9 +38,17 @@ class AI:
             self.name, self.complexity, self.depth = random.choice(self.bot_choices)[28:]
 
         self.bot = True
-        self.piece_count = 16
+        self.piece_count = 39
         self.piece_collection = ('king', 'queen', 'rook', 'bishop', 'knight', 'pawn')
 
-    def get_move(self, board, depth, pov = True,): # True -> player1, False -> player2
+    def get_move(self, board, depth, pov = True): # True -> player1, MAXIMIZING, False -> player2, MINIMIZING
+        piece_value = {
+            "pawn": 1.0, 
+            "bishop": 3.0,
+            "rook": 5.0,
+            "queen": 9.0,
+            "king": float('inf')
+        }
+
         if pov:
-            pass 
+            board.player1
