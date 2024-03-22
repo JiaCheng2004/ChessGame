@@ -47,13 +47,13 @@ make -j
 ### Executable Arguments and Options
 
 #### Verbose
-`--verbose`, `--debug`, `-verbose`, `-debug`,`-v`, `-V`, `-d`, `-D`
+`--verbose`, `--debug`, `-verbose`, `-debug`,`-v`, `-V`, `-d`, `-D`\
 Showing all the details and what's happening in the background. Used for debugging and behavoir screening. Default is false.
 
 #### Test
-`--test`, `-test`, `-t`, `-T`
+`--test`, `-test`, `-t`, `-T`\
 Testing the program with the testing input, followed by the file name inside the test directory. Used for debugging and testing.
 
 #### AI
-`--ai`, `--bot`, `-ai`, `-bot`
+`--ai`, `--bot`, `-ai`, `-bot`\
 Choose to play the game against an AI, followed by the name of the AI. Default is none.
