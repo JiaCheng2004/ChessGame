@@ -43,8 +43,7 @@ int main(int argc, char* argv []) {
             std::cout << "AI Name: " << aiName << std::endl;
     }
 
-    std::cout << "Verbose: " << verbose << std::endl;
-
+    
 
     return 0;
 }
