@@ -17,6 +17,7 @@
 #include <vector>
 #include <map>
 #include <iomanip>
+#include <sstream>
 
 // Private Library:
 #include "colors.h"
@@ -40,7 +41,7 @@
 #define C_EMPTY         " "
 #define C_PAWN          "P"
 #define C_ROOK          "R"
-#define C_KNIGHT        "K"
+#define C_KNIGHT        "H"
 #define C_BISHOP        "B"
 #define C_QUEEN         "Q"
 #define C_KING          "K"
@@ -67,6 +68,8 @@ using Coordinates = std::pair<int, int>;
 
 using Moves = std::vector<Coordinates>;
 
+using Weight = std::pair<int, int>;
+
 using Movemaps = std::map<int, Moves>;
 
 // ========================================================================================
@@ -87,8 +90,18 @@ ChessPiece createKing(bool isWhite);
 // Create a new board with all pieces
 Chessboard newBoard();
 
+Moves getAvailableMoves(Chessboard& Board, Movemaps& Map, std::string Square);
+
 // Translation of Address to Index
 Coordinates AddresstoIndex(std::string& square);
+
+std::string IndextoAddress(Coordinates move);
+
+Moves findPiece(Chessboard& board, int Identity);
+
+Weight getTotalWeight(Chessboard& board);
+
+void navigatePiece(Chessboard& Board, std::string Origin, std::string Destination);
 
 // Check if the input is inboard
 bool inBound(int x);
@@ -98,5 +111,14 @@ bool haveOppositeSign(int x, int y);
 
 // print the board in text
 void printBoard(const Chessboard& board);
+
+void printMoves(const Moves& moves);
+
+void printChessPiece(const ChessPiece& piece);
+
+std::string toChessSquare(const Coordinates& coord) ;
+
+// Print the ninja confusion
+void printConfusion();
 
 #endif

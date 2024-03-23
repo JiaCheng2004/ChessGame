@@ -44,7 +44,23 @@ int main(int argc, char* argv []) {
     }
 
     Chessboard board = newBoard();
+    Movemaps Map = createPossibleMovesMap();
+    std::string userChoose = "";
+    std::string userGo = "";
     printBoard(board);
+    // for (int i = 0; i < 8; ++i) {
+    //     for (int j = 0; j < 8; ++j) {
+    //         printChessPiece(board[i][j]);
+    //     }
+    // }
+    while ( userChoose != "quit" || userGo != "quit") {
+        std::cin >> userChoose;
+        Moves moves = getAvailableMoves(board, Map, userChoose);
+        printMoves(moves);
+        std::cin >> userGo;
+        navigatePiece(board, userChoose, userGo);
+        printBoard(board);
+    }
 
     return 0;
 }

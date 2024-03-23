@@ -46,7 +46,7 @@ make -j
 
 ### Executable Arguments and Options
 
-#### Verbose
+#### Verbose    
 `--verbose`, `--debug`, `-verbose`, `-debug`,`-v`, `-V`, `-d`, `-D`\
 Showing all the details and what's happening in the background. Used for debugging and behavoir screening. Default is false.
 
