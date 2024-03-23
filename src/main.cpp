@@ -43,5 +43,8 @@ int main(int argc, char* argv []) {
             std::cout << "AI Name: " << aiName << std::endl;
     }
 
+    Chessboard board = newBoard();
+    printBoard(board);
+
     return 0;
 }
