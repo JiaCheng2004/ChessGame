@@ -1,51 +1,214 @@
 #include <../include/chess.h>
 
+Movemaps createPossibleMovesMap() {
+    Movemaps movesMap;
+
+    // // Create moves for pawn
+    // movesMap[PAWN] = {{0, 1}, {1, 1}, {-1, 1}};
+    // movesMap[-PAWN] = {{0, -1}, {1, -1}, {-1, -1}};
+
+    // Create moves for rook
+    movesMap[ROOK] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+    movesMap[-ROOK] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+
+    // Create moves for knight
+    movesMap[KNIGHT] = {{1, 2}, {-1, 2}, {2, 1}, {-2, 1},
+                        {2, -1}, {-2, -1}, {-1, -2}, {1, -2}};
+    movesMap[-KNIGHT] = {{1, 2}, {-1, 2}, {2, 1}, {-2, 1},
+                         {2, -1}, {-2, -1}, {-1, -2}, {1, -2}};
+
+    // Create moves for bishop
+    movesMap[BISHOP] = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+    movesMap[-BISHOP] = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+
+    // Create moves for queen
+    movesMap[QUEEN] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0},
+                       {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+    movesMap[-QUEEN] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0},
+                        {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+
+    // Create moves for king
+    movesMap[KING] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0},
+                      {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+    movesMap[-KING] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0},
+                       {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+
+    return movesMap;
+}
+
+ChessPiece createPawn(bool isWhite) {
+    int identity = isWhite ? PAWN : -PAWN;
+    char* exhibit = const_cast<char*>(isWhite ? K_WHITE(C_PAWN) : K_BLACK(C_PAWN));
+    int weight = PAWN;
+    return {identity, weight, exhibit, false};
+}
+
+ChessPiece createRook(bool isWhite) {
+    int identity = isWhite ? ROOK : -ROOK;
+    char* exhibit = const_cast<char*>(isWhite ? K_WHITE(C_ROOK) : K_BLACK(C_ROOK));
+    int weight = ROOK; 
+    return {identity, weight, exhibit, false};
+}
+
+ChessPiece createKnight(bool isWhite) {
+    int identity = isWhite ? KNIGHT : -KNIGHT;
+    char* exhibit = const_cast<char*>(isWhite ? K_WHITE(C_KNIGHT) : K_BLACK(C_KNIGHT));
+    int weight = KNIGHT;
+    return {identity, weight, exhibit, false};
+}
+
+ChessPiece createBishop(bool isWhite) {
+    int identity = isWhite ? BISHOP : -BISHOP;
+    char* exhibit = const_cast<char*>(isWhite ? K_WHITE(C_BISHOP) : K_BLACK(C_BISHOP));
+    int weight = BISHOP;
+    return {identity, weight, exhibit, false};
+}
+
+ChessPiece createQueen(bool isWhite) {
+    int identity = isWhite ? QUEEN : -QUEEN;
+    char* exhibit = const_cast<char*>(isWhite ? K_WHITE(C_QUEEN) : K_BLACK(C_QUEEN));
+    int weight = QUEEN;
+    return {identity, weight, exhibit, false};
+}
+
+ChessPiece createKing(bool isWhite) {
+    int identity = isWhite ? KING : -KING;
+    char* exhibit = const_cast<char*>(isWhite ? K_WHITE(C_KING) : K_BLACK(C_KING));
+    int weight = KING;
+    return {identity, weight, exhibit, false};
+}
+
 // Create a new board with all pieces
 Chessboard newBoard() {
-    Chessboard board = {{
-        {-ROOK, -KNIGHT, -BISHOP, -QUEEN, -KING, -BISHOP, -KNIGHT, -ROOK},
-        {-PAWN, -PAWN, -PAWN, -PAWN, -PAWN, -PAWN, -PAWN, -PAWN},
-        {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-        {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-        {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-        {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-        {PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN},
-        {ROOK, KNIGHT, BISHOP, QUEEN, KING, BISHOP, KNIGHT, ROOK}
-    }};
+    Chessboard board;
 
-    // Initialize all the board piece to unmoved
-    for (int i = 0; i < 8; i++) {
-        setUnmoved(board[i][0]);
-        setUnmoved(board[i][1]);
-        setUnmoved(board[i][6]);
-        setUnmoved(board[i][7]);
+    // Place white pieces
+    board[0][0] = createRook(false);
+    board[0][1] = createKnight(false);
+    board[0][2] = createBishop(false);
+    board[0][3] = createQueen(false);
+    board[0][4] = createKing(false);
+    board[0][5] = createBishop(false);
+    board[0][6] = createKnight(false);
+    board[0][7] = createRook(false);
+
+    // Place white pawns
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        board[1][i] = createPawn(false);
+    }
+
+    // Place black pawns
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        board[6][i] = createPawn(true);
+    }
+    // Place black pieces
+    board[7][0] = createRook(true);
+    board[7][1] = createKnight(true);
+    board[7][2] = createBishop(true);
+    board[7][3] = createQueen(true);
+    board[7][4] = createKing(true);
+    board[7][5] = createBishop(true);
+    board[7][6] = createKnight(true);
+    board[7][7] = createRook(true);
+
+    // Place empty squares
+    for (int i = 2; i < 6; ++i) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
+            board[i][j] = {EMPTY, 0, C_EMPTY, false};
+        }
     }
 
     return board;
 }
 
-// Check if x is in bound of board size
-bool inBound(int x) {
-    return 0 <= x && x <= BOARD_SIZE;
-}
+Moves getAvailableMoves(Chessboard& Board, Movemaps& Map, std::string Square) {
+    Coordinates location = AddresstoIndex(Square);
+    int x = location.first;
+    int y = location.second;
+    ChessPiece piece = Board[x][y];
+    Moves availableMoves;
 
-// Check if y has the opposite sign of x
-bool hasOppositeSign(int x, int y) {
-    return x * y < 0;
-}
+    if ( piece.identity == PAWN ) {
 
-// Perform a bit wise OR to set the piece's 10th bit to 1 (unmoved)
-void setUnmoved(int16_t& piece) {
-    piece |= 1 << 10;
-}
+        int temp_x = x;
+        int temp_y = y;
+        
+        ++temp_y;
 
-// Perform a bit wise AND to check if the piece's 10th bit is 1 (unmoved)
-bool getUnmoved(int16_t piece) {
-    return (piece & (1 << 10)) != 0;
+        if ( Board[temp_x][temp_y].identity == EMPTY ) {
+            availableMoves.push_back(std::make_pair(temp_x, temp_y));
+            if ( !piece.moved ) {
+                ++temp_y;
+                if ( Board[temp_x][temp_y].identity == EMPTY ) {
+                    availableMoves.push_back(std::make_pair(temp_x, temp_y));
+                }
+                --temp_y;
+            }
+        }
+
+        if ( haveOppositeSign(piece.identity, Board[temp_x + 1][temp_y].identity) ) {
+            availableMoves.push_back(std::make_pair(temp_x + 1, temp_y));
+        }
+
+        if ( haveOppositeSign(piece.identity, Board[temp_x - 1][temp_y].identity) ) {
+            availableMoves.push_back(std::make_pair(temp_x - 1, temp_y));
+        }
+
+    } else if ( piece.identity == -PAWN ) {
+
+        int temp_x = x;
+        int temp_y = y;
+        
+        --temp_y;
+
+        if ( Board[temp_x][temp_y].identity == EMPTY ) {
+            availableMoves.push_back(std::make_pair(temp_x, temp_y));
+            if ( !piece.moved ) {
+                --temp_y;
+                if ( Board[temp_x][temp_y].identity == EMPTY ) {
+                    availableMoves.push_back(std::make_pair(temp_x, temp_y));
+                }
+                ++temp_y;
+            }
+        }
+
+        if ( haveOppositeSign(piece.identity, Board[temp_x + 1][temp_y].identity) ) {
+            availableMoves.push_back(std::make_pair(temp_x + 1, temp_y));
+        }
+
+        if ( haveOppositeSign(piece.identity, Board[temp_x - 1][temp_y].identity) ) {
+            availableMoves.push_back(std::make_pair(temp_x - 1, temp_y));
+        }
+
+    } else if ( piece.identity == ROOK ) {
+
+    } else if ( piece.identity == -ROOK ) {
+
+    } else if ( piece.identity == KNIGHT ) {
+
+    } else if ( piece.identity == -KNIGHT ) {
+
+    } else if ( piece.identity == BISHOP ) {
+
+    } else if ( piece.identity == -BISHOP ) {
+
+    } else if ( piece.identity == QUEEN ) {
+
+    } else if ( piece.identity == -QUEEN ) {
+
+    } else if ( piece.identity == KING ) {
+
+    } else if ( piece.identity == -KING ) {
+
+    } else {
+
+    }
+
+    return availableMoves;
 }
 
 // Translate a square's name to a pair of indices that refers to rows and columns
-std::pair<int, int> AddresstoIndex(std::string& square) {
+Coordinates AddresstoIndex(std::string& square) {
     // Check if input is size two
     if (square.length() != 2)
         throw std::range_error("Only rows and colum [A-H][1-8]");
@@ -69,182 +232,47 @@ std::pair<int, int> AddresstoIndex(std::string& square) {
     }
 }
 
-// Get all the possible moves, except for Bishop, Rook, and Queen where it return all the directions
-std::vector<std::pair<int, int>> allPossibleMoves(int& piece) {
-
-    // initialize a vector to contain all the moves
-    std::vector<std::pair<int, int>> moves;
-
-    // Check which piece's move
-    switch (piece) {
-        // Nothing, zero means empty square
-        case EMPTY:
-            break;
-        
-        // All possible move for White Pawn
-        case PAWN:
-            moves.push_back(std::make_pair(0, 1));
-            moves.push_back(std::make_pair(0, 2));
-            moves.push_back(std::make_pair(1, 1));
-            moves.push_back(std::make_pair(-1, 1));
-            break;
-
-        // All possible move for Black Pawn
-        case -PAWN:
-            moves.push_back(std::make_pair(0, -1));
-            moves.push_back(std::make_pair(0, -2));
-            moves.push_back(std::make_pair(1, -1));
-            moves.push_back(std::make_pair(-1, -1));
-            break;
-
-        // All possible moves for Knights
-        case KNIGHT:
-        case -KNIGHT:
-            moves.push_back(std::make_pair(1, 2));
-            moves.push_back(std::make_pair(-1, 2));
-            moves.push_back(std::make_pair(2, 1));
-            moves.push_back(std::make_pair(-2, 1));
-            moves.push_back(std::make_pair(2, -1));
-            moves.push_back(std::make_pair(-2, -1));
-            moves.push_back(std::make_pair(-1, -2));
-            moves.push_back(std::make_pair(1, -2));   
-            break;
-
-        // All possible moves directions for Bishops
-        case BISHOP:
-        case -BISHOP:
-            moves.push_back(std::make_pair(1, 1));
-            moves.push_back(std::make_pair(1, -1));
-            moves.push_back(std::make_pair(-1, 1));
-            moves.push_back(std::make_pair(-1, -1));
-            break;
-
-        // All possible moves directions for Rooks
-        case ROOK:
-        case -ROOK:
-            moves.push_back(std::make_pair(0, 1));
-            moves.push_back(std::make_pair(1, 0));
-            moves.push_back(std::make_pair(0, -1));
-            moves.push_back(std::make_pair(-1, 0));
-            break;
-
-        // All possible moves directions for Queens
-        case QUEEN:
-        case -QUEEN:
-            moves.push_back(std::make_pair(1, 1));
-            moves.push_back(std::make_pair(1, -1));
-            moves.push_back(std::make_pair(-1, 1));
-            moves.push_back(std::make_pair(-1, -1));
-            moves.push_back(std::make_pair(0, 1));
-            moves.push_back(std::make_pair(1, 0));
-            moves.push_back(std::make_pair(0, -1));
-            moves.push_back(std::make_pair(-1, 0));
-            break;
-
-        // All possible moves directions for King
-        case KING:
-        case -KING:
-            moves.push_back(std::make_pair(1, 1));
-            moves.push_back(std::make_pair(1, -1));
-            moves.push_back(std::make_pair(-1, 1));
-            moves.push_back(std::make_pair(-1, -1));
-            moves.push_back(std::make_pair(0, 1));
-            moves.push_back(std::make_pair(1, 0));
-            moves.push_back(std::make_pair(0, -1));
-            moves.push_back(std::make_pair(-1, 0));
-            break;
-
-        // Got a value outside the game board
-        default:
-            throw std::range_error("THE FUCK?");   
-    }
-    return moves;
+// Check if x is in bound of board size
+bool inBound(int x) {
+    return 0 <= x && x <= BOARD_SIZE;
 }
 
-// Get all the moves of the selected square
-std::vector<std::pair<int, int>> getMoves(Chessboard& Board, std::pair<int, int> square) {
+bool haveOppositeSign(int x, int y) {
+    // Check if one number is negative and the other is positive or vice versa
+    return (x < 0 && y > 0) || (x > 0 && y < 0);
+}
 
-    // Get the column index
-    int x = square.first;
-
-    // Get the row index
-    int y = square.second;
-
-    // Initialize the vector that will contain all the valid moves
-    std::vector<std::pair<int, int>> moves;
-
-    // Get the value of the piece at the square
-    int piece = Board[x][y];
-
-    // Get the absolute value of the piece at the square
-    int piece_identiy = abs(Board[x][y]);
-
-    // If the piece is an empty square
-    if (piece == 0){ 
-        // return an empty vector meaning no moves are available
-        return moves;
+// Function to print the chessboard
+void printBoard(const Chessboard& board) {
+    // Print the column labels
+    std::cout << "  ";
+    for (char c = 'A'; c <= 'H'; ++c) {
+        std::cout << std::setw(4) << c;
     }
+    std::cout << std::endl;
 
-    // If the piece is any of the sliding pieces
-    if (piece_identiy == BISHOP || piece_identiy == ROOK || piece_identiy == QUEEN) {
+    // Print the top border
+    std::cout << std::setw(4) << "+";
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        std::cout << std::setw(4) << "---+";
+    }
+    std::cout << std::endl;
 
-        // Loop through all the possible directions the piece can go
-        for (std::pair<int, int>& move : allPossibleMoves(piece)) {
+    // Print each row
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        std::cout << std::setw(2) << BOARD_SIZE - i << " |"; // Row label
 
-            // Set a temperary copy of x varaible
-            int temp_x = x;
-
-            // Set a temperary copy of y varaible
-            int temp_y = y;
-            
-            // Loop until reached a piece or the boundary
-            while (true) {
-                // Change the value of temp_x and temp_y based on the direction
-                temp_x += move.first;
-                temp_y += move.second;
-
-                // Check if now temp_x and temp_y is in bound or a valid game position
-                if (!(inBound(temp_x) && inBound(temp_y)))
-                    // break or give up the iteration if true
-                    break;
-                
-                // Check if this new square is an empty equare (0) or opponent piece that can be captured
-                if (Board[temp_x][temp_y] == EMPTY || hasOppositeSign(piece, Board[temp_x][temp_y])) {
-                    // If so, add the position to the valid move container
-                    moves.push_back(std::make_pair(temp_x, temp_y));
-                    break;
-                }
-            }
+        for (int j = 0; j < BOARD_SIZE; ++j) {
+            std::cout << " " << board[i][j].exhibit << " |"; // Exhibit
         }
-    } 
-    // Else if the piece is a non-sliding piece
-    else if (piece_identiy == KNIGHT) {
-        // Iterate through all the possible moves of that piece
-        for (std::pair<int, int>& move : allPossibleMoves(piece)) {
-            // calculate for the new position after moving
-            int temp_x = x + move.first;
-            int temp_y = y + move.second;
 
-            // Check if the new position is outside the board
-            if (!(inBound(temp_x) && inBound(temp_y)))
-                // If outside the board, ignore and continue
-                continue;
-            
-            // Check if the new position is empty(0) or opponent piece that can be captured
-            if (Board[temp_x][temp_y] == EMPTY || hasOppositeSign(piece, Board[temp_x][temp_y]))
-                // If so, add the position to the valid move container
-                moves.push_back(std::make_pair(temp_x, temp_y));
+        std::cout << std::endl;
+
+        // Print the border between rows
+        std::cout << std::setw(4) << "+";
+        for (int k = 0; k < BOARD_SIZE; ++k) {
+            std::cout << std::setw(4) << "---+";
         }
+        std::cout << std::endl;
     }
-    // Else if we're encountering a king
-    else if (piece_identiy == KING) {
-        
-    }
-    // Else if encountering a pawn
-    else {
-        bool blocking = false;
-        
-    }
-
-    return moves;
 }
