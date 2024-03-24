@@ -101,6 +101,16 @@ Moves findPiece(Chessboard& board, int Identity);
 
 Weight getTotalWeight(Chessboard& board);
 
+Moves findAllPieces(Chessboard& board, bool White);
+
+bool isChecked(Chessboard& board, Movemaps Map, bool White);
+
+void highlight(Chessboard& board, Moves moves);
+
+void unhighlight(Chessboard& board, Moves moves);
+
+bool existCoordinate(Moves& moves, const Coordinates location);
+
 void navigatePiece(Chessboard& Board, std::string Origin, std::string Destination);
 
 // Check if the input is inboard

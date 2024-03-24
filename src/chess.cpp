@@ -3,9 +3,9 @@
 Movemaps createPossibleMovesMap() {
     Movemaps movesMap;
 
-    // // Create moves for pawn
-    // movesMap[PAWN] = {{0, 1}, {1, 1}, {-1, 1}};
-    // movesMap[-PAWN] = {{0, -1}, {1, -1}, {-1, -1}};
+    // Create moves for pawn
+    movesMap[PAWN] = {{0, 1}, {1, 1}, {-1, 1}};
+    movesMap[-PAWN] = {{0, -1}, {1, -1}, {-1, -1}};
 
     // Create moves for rook
     movesMap[ROOK] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
@@ -321,6 +321,117 @@ Weight getTotalWeight(Chessboard& board) {
 
     // white on left black on right
     return std::make_pair(white, black);
+}
+
+Moves findAllPieces(Chessboard& board, bool White) {
+    Moves allPieces;
+
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            if ((White && board[i][j].identity > 0) || (!White && board[i][j].identity < 0)) {
+                allPieces.push_back(std::make_pair(i, j));
+            }
+        }
+    }
+
+    return allPieces;
+}
+
+bool isChecked(Chessboard& board, Movemaps Map, bool White) {
+    Coordinates pos = White ? findPiece(board, KING)[0] : findPiece(board, -KING)[0];
+    Moves OpponentPieces = White ? findAllPieces(board, -KING) : findAllPieces(board, KING);
+    
+    for (Coordinates& opponent: OpponentPieces) {
+        Moves opponentMoves = getAvailableMoves(board, Map, IndextoAddress(opponent));
+        for (Coordinates& move: opponentMoves) {
+            if (move == pos) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void highlight(Chessboard& board, Moves moves) {
+    for (Coordinates& move: moves) {
+        switch (board[move.first][move.second].weight) {
+            case EMPTY:
+                board[move.first][move.second].exhibit = K_AVAILABLE(C_AVAILABLE);
+                break;
+            case PAWN:
+                board[move.first][move.second].exhibit = K_AVAILABLE(C_PAWN);
+                break;
+            case ROOK:
+                board[move.first][move.second].exhibit = K_AVAILABLE(C_ROOK);
+                break;
+            case BISHOP:
+                board[move.first][move.second].exhibit = K_AVAILABLE(C_BISHOP);
+                break;
+            case KNIGHT:
+                board[move.first][move.second].exhibit = K_AVAILABLE(C_KNIGHT);
+                break;
+            case QUEEN:
+                board[move.first][move.second].exhibit = K_AVAILABLE(C_QUEEN);
+                break;
+            case KING:
+                board[move.first][move.second].exhibit = K_AVAILABLE(C_KING);
+                break;
+        }
+    }
+}
+
+void unhighlight(Chessboard& board, Moves moves) {
+    for (Coordinates& move: moves) {
+        switch (board[move.first][move.second].identity) {
+            case EMPTY:
+                board[move.first][move.second].exhibit = C_EMPTY;
+                break;
+            case PAWN:
+                board[move.first][move.second].exhibit = K_WHITE(C_PAWN);
+                break;
+            case -PAWN:
+                board[move.first][move.second].exhibit = K_BLACK(C_PAWN);
+                break;
+            case ROOK:
+                board[move.first][move.second].exhibit = K_WHITE(C_ROOK);
+                break;
+            case -ROOK:
+                board[move.first][move.second].exhibit = K_BLACK(C_ROOK);
+                break;
+            case BISHOP:
+                board[move.first][move.second].exhibit = K_WHITE(C_BISHOP);
+                break;
+            case -BISHOP:
+                board[move.first][move.second].exhibit = K_BLACK(C_BISHOP);
+                break;
+            case KNIGHT:
+                board[move.first][move.second].exhibit = K_WHITE(C_KNIGHT);
+                break;
+            case -KNIGHT:
+                board[move.first][move.second].exhibit = K_BLACK(C_KNIGHT);
+                break;
+            case QUEEN:
+                board[move.first][move.second].exhibit = K_WHITE(C_QUEEN);
+                break;
+            case -QUEEN:
+                board[move.first][move.second].exhibit = K_BLACK(C_QUEEN);
+                break;
+            case KING:
+                board[move.first][move.second].exhibit = K_WHITE(C_KING);
+                break;
+            case -KING:
+                board[move.first][move.second].exhibit = K_BLACK(C_KING);
+                break;
+        }
+    }
+}
+
+bool existCoordinate(Moves& moves, const Coordinates location) {
+    for (Coordinates& move: moves) {
+        if (move == location)
+            return true;
+    }
+    return false;
 }
 
 void navigatePiece(Chessboard& Board, std::string Origin, std::string Destination) {

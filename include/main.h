@@ -21,4 +21,13 @@ void print_usage() {
     exit(EXIT_FAILURE);
 }
 
+void getInput(std::string& buf){
+    while (true) {
+        std::cin >> buf;
+        if (buf.length() == 2 && inBound(buf[0] - 'A') && inBound(buf[1] - '1'))
+            break;
+        std::cout << "Only accept input rows and colum [A-H][1-8]" << std::endl;
+    }
+}
+
 #endif

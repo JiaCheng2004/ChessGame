@@ -45,21 +45,43 @@ int main(int argc, char* argv []) {
 
     Chessboard board = newBoard();
     Movemaps Map = createPossibleMovesMap();
-    std::string userChoose = "";
-    std::string userGo = "";
-    printBoard(board);
-    // for (int i = 0; i < 8; ++i) {
-    //     for (int j = 0; j < 8; ++j) {
-    //         printChessPiece(board[i][j]);
-    //     }
-    // }
-    while ( userChoose != "quit" || userGo != "quit") {
-        std::cin >> userChoose;
-        Moves moves = getAvailableMoves(board, Map, userChoose);
-        printMoves(moves);
-        std::cin >> userGo;
-        navigatePiece(board, userChoose, userGo);
+    bool Game = true;
+    bool White = true;
+    std::string origin = "";
+    std::string destination = "";
+
+    while (Game) {
         printBoard(board);
+        getInput(origin);
+        Coordinates o = AddresstoIndex(origin);
+
+        if (White) {
+            if (board[o.first][o.second].identity <= 0)
+                continue;
+        } else {
+            if (board[o.first][o.second].identity >= 0)
+                continue;  
+        }
+
+        Moves availableMoves = getAvailableMoves(board, Map, origin);
+        highlight(board, availableMoves);
+
+        while (true) {
+            printBoard(board);
+            getInput(destination);
+            if (destination == "undo") {
+                unhighlight(board, availableMoves);
+                break;
+            }
+            Coordinates address = AddresstoIndex(destination);
+            if (existCoordinate(availableMoves, address)) {
+                navigatePiece(board, origin, destination);
+                unhighlight(board, availableMoves);
+                White = !White;
+            } else {
+                continue;
+            }
+        }
     }
 
     return 0;
