@@ -43,44 +43,57 @@ int main(int argc, char* argv []) {
             std::cout << "AI Name: " << aiName << std::endl;
     }
 
-    Chessboard board = newBoard();
+    Chessboard Board = newBoard();
     Movemaps Map = createPossibleMovesMap();
     bool Game = true;
     bool White = true;
+    bool playerSelect = false;
     std::string origin = "";
     std::string destination = "";
 
     while (Game) {
-        printBoard(board);
+        std::cout << CLEAR_SCREEN;
+        printBoard(Board);
+        if (playerSelect)
+            std::cout << "Please select your own game piece" << std::endl;
+
         getInput(origin);
+        if (origin == "UNDO")
+            continue;
+        
         Coordinates o = AddresstoIndex(origin);
 
-        if (White) {
-            if (board[o.first][o.second].identity <= 0)
-                continue;
-        } else {
-            if (board[o.first][o.second].identity >= 0)
-                continue;  
+        if ((White && Board[o.first][o.second].identity <= 0) || (!White && Board[o.first][o.second].identity >= 0)) { 
+            playerSelect = true;
+            continue; 
         }
 
-        Moves availableMoves = getAvailableMoves(board, Map, origin);
-        highlight(board, availableMoves);
+        playerSelect = false;
+
+        Moves availableMoves = getAvailableMoves(Board, Map, origin);
+        highlight(Board, availableMoves);
 
         while (true) {
-            printBoard(board);
+            std::cout << CLEAR_SCREEN;
+            printBoard(Board);
+            printMoves(availableMoves);
+
             getInput(destination);
-            if (destination == "undo") {
-                unhighlight(board, availableMoves);
+
+            if (destination == "UNDO") {
+                unhighlight(Board, availableMoves);
                 break;
             }
-            Coordinates address = AddresstoIndex(destination);
-            if (existCoordinate(availableMoves, address)) {
-                navigatePiece(board, origin, destination);
-                unhighlight(board, availableMoves);
-                White = !White;
-            } else {
+
+            Coordinates d = AddresstoIndex(destination);
+
+            if (!existCoordinate(availableMoves, d))
                 continue;
-            }
+
+            navigatePiece(Board, origin, destination);
+            unhighlight(Board, availableMoves);
+            White = !White;
+            break;
         }
     }
 

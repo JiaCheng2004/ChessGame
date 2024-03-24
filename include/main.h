@@ -12,6 +12,8 @@
 #include <getopt.h>
 #include <cstdlib>
 
+#define CLEAR_SCREEN "\033[1;1H\033[2J"
+
 void print_usage() {
     std::cerr << "Usage: ChessGame [options]" << std::endl;
     std::cerr << "Options:" << std::endl;
@@ -24,6 +26,9 @@ void print_usage() {
 void getInput(std::string& buf){
     while (true) {
         std::cin >> buf;
+        std::transform(buf.begin(), buf.end(), buf.begin(), ::toupper);
+        if (buf == "UNDO")
+            return;
         if (buf.length() == 2 && inBound(buf[0] - 'A') && inBound(buf[1] - '1'))
             break;
         std::cout << "Only accept input rows and colum [A-H][1-8]" << std::endl;
