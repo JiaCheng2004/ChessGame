@@ -4,78 +4,78 @@ Movemaps createPossibleMovesMap() {
     Movemaps movesMap;
 
     // Create moves for pawn
-    movesMap[PAWN] = {{0, 1}, {1, 1}, {-1, 1}};
-    movesMap[-PAWN] = {{0, -1}, {1, -1}, {-1, -1}};
+    movesMap[PAWN] = { { 0, 1 }, { 1, 1 }, { -1, 1 } };
+    movesMap[-PAWN] = { { 0, -1 }, { 1, -1 }, { -1, -1 } };
 
     // Create moves for rook
-    movesMap[ROOK] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-    movesMap[-ROOK] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+    movesMap[ROOK] = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+    movesMap[-ROOK] = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
 
     // Create moves for knight
-    movesMap[KNIGHT] = {{1, 2}, {-1, 2}, {2, 1}, {-2, 1},
-                        {2, -1}, {-2, -1}, {-1, -2}, {1, -2}};
-    movesMap[-KNIGHT] = {{1, 2}, {-1, 2}, {2, 1}, {-2, 1},
-                         {2, -1}, {-2, -1}, {-1, -2}, {1, -2}};
+    movesMap[KNIGHT] = { { 1, 2 }, { -1, 2 }, { 2, 1 }, { -2, 1 }, { 2, -1 }, { -2, -1 },
+        { -1, -2 }, { 1, -2 } };
+    movesMap[-KNIGHT] = { { 1, 2 }, { -1, 2 }, { 2, 1 }, { -2, 1 }, { 2, -1 }, { -2, -1 },
+        { -1, -2 }, { 1, -2 } };
 
     // Create moves for bishop
-    movesMap[BISHOP] = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
-    movesMap[-BISHOP] = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+    movesMap[BISHOP] = { { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } };
+    movesMap[-BISHOP] = { { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } };
 
     // Create moves for queen
-    movesMap[QUEEN] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0},
-                       {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
-    movesMap[-QUEEN] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0},
-                        {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+    movesMap[QUEEN]
+        = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }, { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } };
+    movesMap[-QUEEN]
+        = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }, { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } };
 
     // Create moves for king
-    movesMap[KING] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0},
-                      {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
-    movesMap[-KING] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0},
-                       {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+    movesMap[KING]
+        = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }, { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } };
+    movesMap[-KING]
+        = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }, { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } };
 
     return movesMap;
 }
 
 ChessPiece createPawn(bool isWhite) {
     int identity = isWhite ? PAWN : -PAWN;
-    char* exhibit = const_cast<char*>(isWhite ? K_WHITE(C_PAWN) : K_BLACK(C_PAWN));
+    char *exhibit = const_cast<char *>(isWhite ? K_WHITE(C_PAWN) : K_BLACK(C_PAWN));
     int weight = PAWN;
-    return {identity, weight, exhibit, false};
+    return { identity, weight, exhibit, false };
 }
 
 ChessPiece createRook(bool isWhite) {
     int identity = isWhite ? ROOK : -ROOK;
-    char* exhibit = const_cast<char*>(isWhite ? K_WHITE(C_ROOK) : K_BLACK(C_ROOK));
-    int weight = ROOK; 
-    return {identity, weight, exhibit, false};
+    char *exhibit = const_cast<char *>(isWhite ? K_WHITE(C_ROOK) : K_BLACK(C_ROOK));
+    int weight = ROOK;
+    return { identity, weight, exhibit, false };
 }
 
 ChessPiece createKnight(bool isWhite) {
     int identity = isWhite ? KNIGHT : -KNIGHT;
-    char* exhibit = const_cast<char*>(isWhite ? K_WHITE(C_KNIGHT) : K_BLACK(C_KNIGHT));
+    char *exhibit = const_cast<char *>(isWhite ? K_WHITE(C_KNIGHT) : K_BLACK(C_KNIGHT));
     int weight = KNIGHT;
-    return {identity, weight, exhibit, false};
+    return { identity, weight, exhibit, false };
 }
 
 ChessPiece createBishop(bool isWhite) {
     int identity = isWhite ? BISHOP : -BISHOP;
-    char* exhibit = const_cast<char*>(isWhite ? K_WHITE(C_BISHOP) : K_BLACK(C_BISHOP));
+    char *exhibit = const_cast<char *>(isWhite ? K_WHITE(C_BISHOP) : K_BLACK(C_BISHOP));
     int weight = BISHOP;
-    return {identity, weight, exhibit, false};
+    return { identity, weight, exhibit, false };
 }
 
 ChessPiece createQueen(bool isWhite) {
     int identity = isWhite ? QUEEN : -QUEEN;
-    char* exhibit = const_cast<char*>(isWhite ? K_WHITE(C_QUEEN) : K_BLACK(C_QUEEN));
+    char *exhibit = const_cast<char *>(isWhite ? K_WHITE(C_QUEEN) : K_BLACK(C_QUEEN));
     int weight = QUEEN;
-    return {identity, weight, exhibit, false};
+    return { identity, weight, exhibit, false };
 }
 
 ChessPiece createKing(bool isWhite) {
     int identity = isWhite ? KING : -KING;
-    char* exhibit = const_cast<char*>(isWhite ? K_WHITE(C_KING) : K_BLACK(C_KING));
+    char *exhibit = const_cast<char *>(isWhite ? K_WHITE(C_KING) : K_BLACK(C_KING));
     int weight = KING;
-    return {identity, weight, exhibit, false};
+    return { identity, weight, exhibit, false };
 }
 
 // Create a new board with all pieces
@@ -114,32 +114,32 @@ Chessboard newBoard() {
     // Place empty squares
     for (int i = 2; i < 6; ++i) {
         for (int j = 0; j < BOARD_SIZE; ++j) {
-            board[i][j] = {EMPTY, EMPTY, C_EMPTY, false};
+            board[i][j] = { EMPTY, EMPTY, C_EMPTY, false };
         }
     }
 
     return board;
 }
 
-Moves getAvailableMoves(Chessboard& Board, Movemaps& Map, std::string Square) {
+Moves getAvailableMoves(Chessboard &Board, Movemaps &Map, std::string Square) {
     Coordinates location = AddresstoIndex(Square);
     int x = location.first;
     int y = location.second;
     ChessPiece piece = Board[x][y];
     Moves availableMoves;
 
-    if ( piece.weight == PAWN ) {
+    if (piece.weight == PAWN) {
 
         int temp_x = x;
         int temp_y = y;
-        
+
         (piece.identity == PAWN) ? --temp_x : ++temp_x;
 
-        if ( Board[temp_x][temp_y].identity == EMPTY ) {
+        if (Board[temp_x][temp_y].identity == EMPTY) {
             availableMoves.push_back(std::make_pair(temp_x, temp_y));
-            if ( !piece.moved ) {
+            if (!piece.moved) {
                 (piece.identity == PAWN) ? --temp_x : ++temp_x;
-                if ( Board[temp_x][temp_y].identity == EMPTY ) {
+                if (Board[temp_x][temp_y].identity == EMPTY) {
                     availableMoves.push_back(std::make_pair(temp_x, temp_y));
                 }
                 ++temp_x;
@@ -147,31 +147,30 @@ Moves getAvailableMoves(Chessboard& Board, Movemaps& Map, std::string Square) {
             }
         }
 
-        if ( haveOppositeSign(piece.identity, Board[temp_x][temp_y + 1].identity) ) {
+        if (haveOppositeSign(piece.identity, Board[temp_x][temp_y + 1].identity)) {
             availableMoves.push_back(std::make_pair(temp_x, temp_y + 1));
         }
 
-        if ( haveOppositeSign(piece.identity, Board[temp_x][temp_y - 1].identity) ) {
+        if (haveOppositeSign(piece.identity, Board[temp_x][temp_y - 1].identity)) {
             availableMoves.push_back(std::make_pair(temp_x, temp_y - 1));
         }
 
-    } else if ( piece.weight == KNIGHT ) {
+    } else if (piece.weight == KNIGHT) {
 
-        for (Coordinates& move: Map[piece.identity]) {
+        for (Coordinates &move : Map[piece.identity]) {
             int temp_x = x + move.first;
             int temp_y = y + move.second;
 
             if (inBound(temp_x) && inBound(temp_y)) {
-                if (Board[temp_x][temp_y].identity == EMPTY || haveOppositeSign(piece.identity, Board[temp_x][temp_y].identity))
+                if (Board[temp_x][temp_y].identity == EMPTY
+                    || haveOppositeSign(piece.identity, Board[temp_x][temp_y].identity))
                     availableMoves.push_back(std::make_pair(temp_x, temp_y));
             }
         }
 
-    } else if ( piece.weight == BISHOP ||
-                piece.weight == QUEEN ||
-                piece.weight == ROOK ) {
+    } else if (piece.weight == BISHOP || piece.weight == QUEEN || piece.weight == ROOK) {
 
-        for (Coordinates& move: Map[piece.identity]) {
+        for (Coordinates &move : Map[piece.identity]) {
             int temp_x = x;
             int temp_y = y;
 
@@ -186,35 +185,34 @@ Moves getAvailableMoves(Chessboard& Board, Movemaps& Map, std::string Square) {
                     availableMoves.push_back(std::make_pair(temp_x, temp_y));
                     continue;
                 }
-                
+
                 if (haveOppositeSign(piece.identity, Board[temp_x][temp_y].identity))
                     availableMoves.push_back(std::make_pair(temp_x, temp_y));
                 break;
             }
         }
 
-    } else if ( piece.weight == KING) {
+    } else if (piece.weight == KING) {
 
-        if ( !piece.moved ) {
+        if (!piece.moved) {
             int temp_x = x;
             int temp_y = y;
-            
+
             while (true) {
                 ++temp_x;
 
                 if (!inBound(temp_x) || !inBound(temp_y))
                     break;
-                    
+
                 if (Board[temp_x][temp_y].identity == EMPTY)
                     continue;
 
-                if (Board[temp_x][temp_y].identity == ROOK && 
-                    !haveOppositeSign(piece.identity, Board[temp_x][temp_y].identity) && 
-                    !Board[temp_x][temp_y].moved) {
+                if (Board[temp_x][temp_y].identity == ROOK
+                    && !haveOppositeSign(piece.identity, Board[temp_x][temp_y].identity)
+                    && !Board[temp_x][temp_y].moved) {
 
                     availableMoves.push_back(std::make_pair(temp_x, temp_y));
                     break;
-
                 }
             }
 
@@ -225,29 +223,29 @@ Moves getAvailableMoves(Chessboard& Board, Movemaps& Map, std::string Square) {
 
                 if (!inBound(temp_x) || !inBound(temp_y))
                     break;
-                    
+
                 if (Board[temp_x][temp_y].identity == EMPTY)
                     continue;
 
-                if (Board[temp_x][temp_y].identity == ROOK && 
-                    !haveOppositeSign(piece.identity, Board[temp_x][temp_y].identity) && 
-                    !Board[temp_x][temp_y].moved) {
+                if (Board[temp_x][temp_y].identity == ROOK
+                    && !haveOppositeSign(piece.identity, Board[temp_x][temp_y].identity)
+                    && !Board[temp_x][temp_y].moved) {
 
                     availableMoves.push_back(std::make_pair(temp_x, temp_y));
                     break;
-
                 }
             }
 
             temp_x = x;
         }
 
-        for (Coordinates& move: Map[piece.identity]) {
+        for (Coordinates &move : Map[piece.identity]) {
             int temp_x = x + move.first;
             int temp_y = y + move.second;
 
             if (inBound(temp_x) && inBound(temp_y)) {
-                if (Board[temp_x][temp_y].identity == EMPTY || haveOppositeSign(piece.identity, Board[temp_x][temp_y].identity))
+                if (Board[temp_x][temp_y].identity == EMPTY
+                    || haveOppositeSign(piece.identity, Board[temp_x][temp_y].identity))
                     availableMoves.push_back(std::make_pair(temp_x, temp_y));
             }
         }
@@ -258,8 +256,9 @@ Moves getAvailableMoves(Chessboard& Board, Movemaps& Map, std::string Square) {
     return availableMoves;
 }
 
-// Translate a square's name to a pair of indices that refers to rows and columns
-Coordinates AddresstoIndex(std::string& square) {
+// Translate a square's name to a pair of indices that refers to rows and
+// columns
+Coordinates AddresstoIndex(std::string &square) {
     // Check if input is size two
     if (square.length() != 2)
         throw std::range_error("Only rows and colum [A-H][1-8]");
@@ -274,7 +273,7 @@ Coordinates AddresstoIndex(std::string& square) {
     int row = 7 - (square[1] - '1');
 
     // if the rows and columns are valid
-    if (inBound(row) && inBound(column)){
+    if (inBound(row) && inBound(column)) {
         return std::make_pair(row, column);
     } else {
         // else throw range error and exit
@@ -285,16 +284,16 @@ Coordinates AddresstoIndex(std::string& square) {
 
 std::string IndextoAddress(Coordinates move) {
     std::stringstream ss;
-    ss << (char)('A' + move.second) << 8 - move.first;
+    ss << (char) ('A' + move.second) << 8 - move.first;
     return ss.str();
 }
 
-Moves findPiece(Chessboard& board, int Identity) {
+Moves findPiece(Chessboard &board, int Identity) {
     Moves Location;
 
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
-            if ( board[i][j].identity == Identity)
+            if (board[i][j].identity == Identity)
                 Location.push_back(std::make_pair(i, j));
         }
     }
@@ -302,7 +301,7 @@ Moves findPiece(Chessboard& board, int Identity) {
     return Location;
 }
 
-Weight getTotalWeight(Chessboard& board) {
+Weight getTotalWeight(Chessboard &board) {
     int white = 0;
     int black = 0;
 
@@ -310,7 +309,7 @@ Weight getTotalWeight(Chessboard& board) {
         for (int j = 0; j < 8; ++j) {
             if (board[i][j].identity == 0) {
                 continue;
-            } else if ( board[i][j].identity > 0) {
+            } else if (board[i][j].identity > 0) {
                 white += board[i][j].weight;
             } else {
                 black -= board[i][j].weight;
@@ -322,7 +321,7 @@ Weight getTotalWeight(Chessboard& board) {
     return std::make_pair(white, black);
 }
 
-Moves findAllPieces(Chessboard& board, bool White) {
+Moves findAllPieces(Chessboard &board, bool White) {
     Moves allPieces;
 
     for (int i = 0; i < 8; ++i) {
@@ -336,13 +335,13 @@ Moves findAllPieces(Chessboard& board, bool White) {
     return allPieces;
 }
 
-bool isChecked(Chessboard& board, Movemaps Map, bool White) {
+bool isChecked(Chessboard &board, Movemaps Map, bool White) {
     Coordinates pos = White ? findPiece(board, KING)[0] : findPiece(board, -KING)[0];
     Moves OpponentPieces = White ? findAllPieces(board, -KING) : findAllPieces(board, KING);
-    
-    for (Coordinates& opponent: OpponentPieces) {
+
+    for (Coordinates &opponent : OpponentPieces) {
         Moves opponentMoves = getAvailableMoves(board, Map, IndextoAddress(opponent));
-        for (Coordinates& move: opponentMoves) {
+        for (Coordinates &move : opponentMoves) {
             if (move == pos) {
                 return true;
             }
@@ -351,109 +350,69 @@ bool isChecked(Chessboard& board, Movemaps Map, bool White) {
     return false;
 }
 
-void highlight(Chessboard& board, Moves moves) {
-    for (Coordinates& move: moves) {
+void highlight(Chessboard &board, Moves moves) {
+    for (Coordinates &move : moves) {
         switch (board[move.first][move.second].weight) {
-            case EMPTY:
-                board[move.first][move.second].exhibit = K_AVAILABLE(C_AVAILABLE);
-                break;
-            case PAWN:
-                board[move.first][move.second].exhibit = K_AVAILABLE(C_PAWN);
-                break;
-            case ROOK:
-                board[move.first][move.second].exhibit = K_AVAILABLE(C_ROOK);
-                break;
-            case BISHOP:
-                board[move.first][move.second].exhibit = K_AVAILABLE(C_BISHOP);
-                break;
-            case KNIGHT:
-                board[move.first][move.second].exhibit = K_AVAILABLE(C_KNIGHT);
-                break;
-            case QUEEN:
-                board[move.first][move.second].exhibit = K_AVAILABLE(C_QUEEN);
-                break;
-            case KING:
-                board[move.first][move.second].exhibit = K_AVAILABLE(C_KING);
-                break;
+        case EMPTY: board[move.first][move.second].exhibit = K_AVAILABLE(C_AVAILABLE); break;
+        case PAWN: board[move.first][move.second].exhibit = K_AVAILABLE(C_PAWN); break;
+        case ROOK: board[move.first][move.second].exhibit = K_AVAILABLE(C_ROOK); break;
+        case BISHOP: board[move.first][move.second].exhibit = K_AVAILABLE(C_BISHOP); break;
+        case KNIGHT: board[move.first][move.second].exhibit = K_AVAILABLE(C_KNIGHT); break;
+        case QUEEN: board[move.first][move.second].exhibit = K_AVAILABLE(C_QUEEN); break;
+        case KING: board[move.first][move.second].exhibit = K_AVAILABLE(C_KING); break;
         }
     }
 }
 
-void unhighlight(Chessboard& board, Moves moves) {
-    for (Coordinates& move: moves) {
+void unhighlight(Chessboard &board, Moves moves) {
+    for (Coordinates &move : moves) {
         switch (board[move.first][move.second].identity) {
-            case EMPTY:
-                board[move.first][move.second].exhibit = C_EMPTY;
-                break;
-            case PAWN:
-                board[move.first][move.second].exhibit = K_WHITE(C_PAWN);
-                break;
-            case -PAWN:
-                board[move.first][move.second].exhibit = K_BLACK(C_PAWN);
-                break;
-            case ROOK:
-                board[move.first][move.second].exhibit = K_WHITE(C_ROOK);
-                break;
-            case -ROOK:
-                board[move.first][move.second].exhibit = K_BLACK(C_ROOK);
-                break;
-            case BISHOP:
-                board[move.first][move.second].exhibit = K_WHITE(C_BISHOP);
-                break;
-            case -BISHOP:
-                board[move.first][move.second].exhibit = K_BLACK(C_BISHOP);
-                break;
-            case KNIGHT:
-                board[move.first][move.second].exhibit = K_WHITE(C_KNIGHT);
-                break;
-            case -KNIGHT:
-                board[move.first][move.second].exhibit = K_BLACK(C_KNIGHT);
-                break;
-            case QUEEN:
-                board[move.first][move.second].exhibit = K_WHITE(C_QUEEN);
-                break;
-            case -QUEEN:
-                board[move.first][move.second].exhibit = K_BLACK(C_QUEEN);
-                break;
-            case KING:
-                board[move.first][move.second].exhibit = K_WHITE(C_KING);
-                break;
-            case -KING:
-                board[move.first][move.second].exhibit = K_BLACK(C_KING);
-                break;
+        case EMPTY: board[move.first][move.second].exhibit = C_EMPTY; break;
+        case PAWN: board[move.first][move.second].exhibit = K_WHITE(C_PAWN); break;
+        case -PAWN: board[move.first][move.second].exhibit = K_BLACK(C_PAWN); break;
+        case ROOK: board[move.first][move.second].exhibit = K_WHITE(C_ROOK); break;
+        case -ROOK: board[move.first][move.second].exhibit = K_BLACK(C_ROOK); break;
+        case BISHOP: board[move.first][move.second].exhibit = K_WHITE(C_BISHOP); break;
+        case -BISHOP: board[move.first][move.second].exhibit = K_BLACK(C_BISHOP); break;
+        case KNIGHT: board[move.first][move.second].exhibit = K_WHITE(C_KNIGHT); break;
+        case -KNIGHT: board[move.first][move.second].exhibit = K_BLACK(C_KNIGHT); break;
+        case QUEEN: board[move.first][move.second].exhibit = K_WHITE(C_QUEEN); break;
+        case -QUEEN: board[move.first][move.second].exhibit = K_BLACK(C_QUEEN); break;
+        case KING: board[move.first][move.second].exhibit = K_WHITE(C_KING); break;
+        case -KING: board[move.first][move.second].exhibit = K_BLACK(C_KING); break;
         }
     }
 }
 
-bool existCoordinate(Moves& moves, const Coordinates location) {
-    for (Coordinates& move: moves) {
+bool existCoordinate(Moves &moves, const Coordinates location) {
+    for (Coordinates &move : moves) {
         if (move == location)
             return true;
     }
     return false;
 }
 
-void navigatePiece(Chessboard& Board, Coordinates Origin, Coordinates Destination) {
-    ChessPiece& o = Board[Origin.first][Origin.second];
-    ChessPiece& d = Board[Destination.first][Destination.second];
-    
+void navigatePiece(Chessboard &Board, Coordinates Origin, Coordinates Destination) {
+    ChessPiece &o = Board[Origin.first][Origin.second];
+    ChessPiece &d = Board[Destination.first][Destination.second];
+
     if (d.identity == EMPTY || haveOppositeSign(o.identity, d.identity)) {
         o.moved = true;
         d = o;
-        o = {EMPTY, EMPTY, C_EMPTY, false};
+        o = { EMPTY, EMPTY, C_EMPTY, false };
     } else {
         o.moved = true;
         d.moved = true;
         if (Destination.second == 0) {
             Board[Origin.first][Origin.second - 2] = o;
-            o = {EMPTY, EMPTY, C_EMPTY, false};
+            o = { EMPTY, EMPTY, C_EMPTY, false };
             Board[Destination.first][Destination.second + 3] = d;
-            d = {EMPTY, EMPTY, C_EMPTY, false};
+            d = { EMPTY, EMPTY, C_EMPTY, false };
         } else {
             Board[Origin.first][Origin.second + 2] = o;
-            o = {EMPTY, EMPTY, C_EMPTY, false};
+            o = { EMPTY, EMPTY, C_EMPTY, false };
             Board[Destination.first][Destination.second - 2] = d;
-            d = {EMPTY, EMPTY, C_EMPTY, false};
+            d = { EMPTY, EMPTY, C_EMPTY, false };
         }
     }
 }
@@ -469,7 +428,7 @@ bool haveOppositeSign(int x, int y) {
 }
 
 // Function to print the chessboard
-void printBoard(const Chessboard& board) {
+void printBoard(const Chessboard &board) {
     // Print the column labels
     std::cout << "  ";
     for (char c = 'A'; c <= 'H'; ++c) {
@@ -503,15 +462,15 @@ void printBoard(const Chessboard& board) {
     }
 }
 
-void printMoves(const Moves& moves) {
+void printMoves(const Moves &moves) {
     std::cout << "[";
-    for (Coordinates move: moves) {
+    for (Coordinates move : moves) {
         std::cout << " \"" << IndextoAddress(move) << "\"";
     }
     std::cout << " ]" << std::endl;
 }
 
-void printChessPiece(const ChessPiece& piece) {
+void printChessPiece(const ChessPiece &piece) {
     std::cout << "Identity: " << piece.identity << std::endl;
     std::cout << "Weight: " << piece.weight << std::endl;
     std::cout << "Exhibit: " << piece.exhibit << std::endl;
@@ -519,7 +478,7 @@ void printChessPiece(const ChessPiece& piece) {
 }
 
 void printConfusion() {
-    const char* confusion = R"(
+    const char *confusion = R"(
 ⢠⠘⠤⠐⠤⡀⠄⢢⡐⢆⠲⡐⢆⢣⠚⡔⢣⡚⡔⢣⠚⡔⢣⠜⡤⢃⠜⡠⠃⠜⡀⠣⠐⠀⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠨⠑⣯⡹⣝⢯⡹⣏⢿⡼⣏⢾⣱⢳⡞⡽⣎⢷⡹⣎⢷⣫⢗⡯⣝⢯⡝⣯⠽⣭⢻⡝⡾⣭⢳⢯⡝⣯
 ⠀⢎⠰⣉⠦⣑⡘⢦⡘⢆⢣⢉⢎⠲⡩⢜⡡⠞⣌⢣⡙⣌⢣⠚⡄⠣⠐⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢲⡝⣬⠳⣝⡞⣧⠿⣜⡧⣏⢷⣹⢳⡝⣮⢳⡹⣎⢗⣫⢼⣫⢞⡽⣎⠿⣜⡳⣝⡳⣭⢇⡏⣾⢳
 ⠈⢆⠱⢂⠖⠤⣉⠖⡸⢌⠢⢍⢢⢃⡕⢪⠴⡩⢔⢢⡑⢆⢣⡙⢄⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢣⢞⡵⣫⢶⡹⣎⡿⣹⡞⡽⣎⢷⣫⢞⣱⢫⠵⣎⢯⡜⣣⣝⢮⡳⣭⢻⡼⣹⢎⡷⣹⠎⣹⢎⡿

@@ -37,3 +37,13 @@ endforeach(LIBRARY)
 
 # define the installation path for the make install command
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+
+# Add make format target
+add_custom_target(format
+    COMMAND ${CMAKE_COMMAND} -E echo "Running clang-format..."
+    COMMAND clang-format -i -style=file ${SOURCES} ${HEADERS}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+# Set the target format to depend on your project
+add_dependencies(format ${PROJECT_NAME})
