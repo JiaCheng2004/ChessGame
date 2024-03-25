@@ -350,6 +350,13 @@ bool isChecked(Chessboard &board, Movemaps Map, bool White) {
     return false;
 }
 
+// incomplete
+bool isCheckmated(Chessboard &board, Movemaps Map, bool White) {
+    Coordinates pos = White ? findPiece(board, KING)[0] : findPiece(board, -KING)[0];
+    Moves OpponentPieces = White ? findAllPieces(board, -KING) : findAllPieces(board, KING);
+    return true;
+}
+
 void highlight(Chessboard &board, Moves moves) {
     for (Coordinates &move : moves) {
         switch (board[move.first][move.second].weight) {
@@ -396,16 +403,17 @@ void navigatePiece(Chessboard &Board, Coordinates Origin, Coordinates Destinatio
     ChessPiece &o = Board[Origin.first][Origin.second];
     ChessPiece &d = Board[Destination.first][Destination.second];
 
-    if (o.identity == PAWN) {
-        if (Origin.second == 8) {
-            /* code */
-        }
+    //When the pawn touch the wall, then PAWN change to QUEEN
+    // if (o.identity == PAWN) {
+    //     if (Destination.second == 7) {
+    //         o.identity == QUEEN;
+    //     }
 
-    } else if (o.identity == -PAWN) {
-        if (Origin.second == 1) {
-            /* code */
-        }
-    }
+    // } else if (o.identity == -PAWN) {
+    //     if (Destination.second == 0) {
+    //         o.identity == -QUEEN;
+    //     }
+    // }
 
     if (d.identity == EMPTY || haveOppositeSign(o.identity, d.identity)) {
         o.moved = true;
