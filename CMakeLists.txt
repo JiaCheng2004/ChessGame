@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 project(ChessGame)
 
 # less than 13.2 version will not work
-if (CMAKE_CXX_COMPILER_VERSION LESS 13.2)
+if (CMAKE_CXX_COMPILER_VERSION LESS 11.4)
     message(FATAL_ERROR "Insufficient gcc version")
 endif()
 
@@ -37,3 +37,13 @@ endforeach(LIBRARY)
 
 # define the installation path for the make install command
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+
+# Add make format target
+add_custom_target(format
+    COMMAND ${CMAKE_COMMAND} -E echo "Running clang-format..."
+    COMMAND clang-format -i -style=file ${SOURCES} ${HEADERS}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+# Set the target format to depend on your project
+add_dependencies(format ${PROJECT_NAME})

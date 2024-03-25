@@ -4,61 +4,64 @@
 #define CHESS_H_
 
 // ========================================================================================
-// ----------------------------------  Included Library  ----------------------------------
+// ----------------------------------  Included Library
+// ----------------------------------
 // ========================================================================================
 
 // Public Library:
 
-#include <iostream>
 #include <algorithm>
 #include <array>
-#include <string>
 #include <exception>
-#include <vector>
-#include <map>
 #include <iomanip>
+#include <iostream>
+#include <map>
 #include <sstream>
+#include <string>
 #include <utility>
+#include <vector>
 
 // Private Library:
 #include "colors.h"
 
 // ========================================================================================
-// ----------------------------------  Constant  Values  ----------------------------------
+// ----------------------------------  Constant  Values
+// ----------------------------------
 // ========================================================================================
 
-#define BOARD_SIZE      8
-#define BOARD_COLUMNS   8
-#define BOARD_ROWS      8
+#define BOARD_SIZE    8
+#define BOARD_COLUMNS 8
+#define BOARD_ROWS    8
 
-#define EMPTY           0
-#define PAWN            1
-#define ROOK            5
-#define KNIGHT          3
-#define BISHOP          4
-#define QUEEN           10
-#define KING            255
+#define EMPTY  0
+#define PAWN   1
+#define ROOK   5
+#define KNIGHT 3
+#define BISHOP 4
+#define QUEEN  10
+#define KING   255
 
-#define C_EMPTY         " "
-#define C_PAWN          "P"
-#define C_ROOK          "R"
-#define C_KNIGHT        "H"
-#define C_BISHOP        "B"
-#define C_QUEEN         "Q"
-#define C_KING          "K"
+#define C_EMPTY  " "
+#define C_PAWN   "P"
+#define C_ROOK   "R"
+#define C_KNIGHT "H"
+#define C_BISHOP "B"
+#define C_QUEEN  "Q"
+#define C_KING   "K"
 
-#define C_AVAILABLE     "*"
+#define C_AVAILABLE "*"
 
 // ========================================================================================
-// ---------------------------  Customized Type and Structures  ---------------------------
+// ---------------------------  Customized Type and Structures
+// ---------------------------
 // ========================================================================================
 
 // Define the ChessPiece structure
 struct ChessPiece {
-    int identity;                   // Identity of the piece
-    int weight;                     // Weight of the piece for minimax
-    const char* exhibit;            // Exhibit for text form showcase
-    bool moved;                     // Whether the piece has ever been moved before
+    int identity; // Identity of the piece
+    int weight; // Weight of the piece for minimax
+    const char *exhibit; // Exhibit for text form showcase
+    bool moved; // Whether the piece has ever been moved before
 };
 
 // Define aliases for chessboard dimensions
@@ -74,7 +77,8 @@ using Weight = std::pair<int, int>;
 using Movemaps = std::map<int, Moves>;
 
 // ========================================================================================
-// ----------------------------------  Helper Functions  ----------------------------------
+// ----------------------------------  Helper Functions
+// ----------------------------------
 // ========================================================================================
 
 // Create a move maps to get every piece's available moves
@@ -91,28 +95,28 @@ ChessPiece createKing(bool isWhite);
 // Create a new board with all pieces
 Chessboard newBoard();
 
-Moves getAvailableMoves(Chessboard& Board, Movemaps& Map, std::string Square);
+Moves getAvailableMoves(Chessboard &Board, Movemaps &Map, std::string Square);
 
 // Translation of Address to Index
-Coordinates AddresstoIndex(std::string& square);
+Coordinates AddresstoIndex(std::string &square);
 
 std::string IndextoAddress(Coordinates move);
 
-Moves findPiece(Chessboard& board, int Identity);
+Moves findPiece(Chessboard &board, int Identity);
 
-Weight getTotalWeight(Chessboard& board);
+Weight getTotalWeight(Chessboard &board);
 
-Moves findAllPieces(Chessboard& board, bool White);
+Moves findAllPieces(Chessboard &board, bool White);
 
-bool isChecked(Chessboard& board, Movemaps Map, bool White);
+bool isChecked(Chessboard &board, Movemaps Map, bool White);
 
-void highlight(Chessboard& board, Moves moves);
+void highlight(Chessboard &board, Moves moves);
 
-void unhighlight(Chessboard& board, Moves moves);
+void unhighlight(Chessboard &board, Moves moves);
 
-bool existCoordinate(Moves& moves, const Coordinates location);
+bool existCoordinate(Moves &moves, const Coordinates location);
 
-void navigatePiece(Chessboard& Board, Coordinates Origin, Coordinates Destination);
+void navigatePiece(Chessboard &Board, Coordinates Origin, Coordinates Destination);
 
 // Check if the input is inboard
 bool inBound(int x);
@@ -121,13 +125,13 @@ bool inBound(int x);
 bool haveOppositeSign(int x, int y);
 
 // print the board in text
-void printBoard(const Chessboard& board);
+void printBoard(const Chessboard &board);
 
-void printMoves(const Moves& moves);
+void printMoves(const Moves &moves);
 
-void printChessPiece(const ChessPiece& piece);
+void printChessPiece(const ChessPiece &piece);
 
-std::string toChessSquare(const Coordinates& coord) ;
+std::string toChessSquare(const Coordinates &coord);
 
 // Print the ninja confusion
 void printConfusion();

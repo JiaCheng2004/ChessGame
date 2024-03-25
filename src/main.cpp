@@ -1,38 +1,27 @@
 #include <../include/main.h>
 
-int main(int argc, char* argv []) {
+int main(int argc, char *argv[]) {
     int verbose = 0;
     std::string testFile;
     std::string aiName;
 
     const char *const short_opts = "vVdDt:T:a:";
-    const option long_opts[] = {
-        {"verbose", no_argument, nullptr, 'v'},
-        {"debug", no_argument, nullptr, 'd'},
-        {"test", required_argument, nullptr, 't'},
-        {"bot", required_argument, nullptr, 'a'},
-        {"ai", required_argument, nullptr, 'a'},
-        {nullptr, 0, nullptr, 0}
-    };
+    const option long_opts[] = { { "verbose", no_argument, nullptr, 'v' },
+        { "debug", no_argument, nullptr, 'd' }, { "test", required_argument, nullptr, 't' },
+        { "bot", required_argument, nullptr, 'a' }, { "ai", required_argument, nullptr, 'a' },
+        { nullptr, 0, nullptr, 0 } };
 
     int opt;
     while ((opt = getopt_long(argc, argv, short_opts, long_opts, nullptr)) != -1) {
         switch (opt) {
-            case 'v':
-            case 'V':
-            case 'd':
-            case 'D':
-                verbose = 1;
-                break;
-            case 't':
-            case 'T':
-                testFile = optarg;
-                break;
-            case 'a':
-                aiName = optarg;
-                break;
-            default:
-                print_usage();
+        case 'v':
+        case 'V':
+        case 'd':
+        case 'D': verbose = 1; break;
+        case 't':
+        case 'T': testFile = optarg; break;
+        case 'a': aiName = optarg; break;
+        default: print_usage();
         }
     }
 
@@ -54,6 +43,38 @@ int main(int argc, char* argv []) {
     while (Game) {
         std::cout << CLEAR_SCREEN;
         printBoard(Board);
+        std::cout << "Please select your piece by [A-H][1-8]. Ex: a1, b2, A1, B2" << std::endl;
+
+        //当有棋子挡路时，仍然会显示 "将"
+        if (isChecked(Board, Map, White)) {
+            Coordinates kingpos = findPiece(Board, -KING)[0];
+            Board[kingpos.first][kingpos.second].exhibit = BOLD(FRED(C_KING));
+            std::cout << CLEAR_SCREEN;
+            printBoard(Board);
+            std::cout << "Please select your piece by [A-H][1-8]. Ex: a1, b2, A1, B2" << std::endl;
+            std::cout << "CHECK" << std::endl;
+        }
+
+        //兵， 升变
+        findPiece(Board, PAWN);
+        findPiece(Board, -PAWN);
+        if (true) {
+            std::cout << "Please select your PAWN to any piece that you want" << std::endl;
+            std::cout << "except the KING" << std::endl;
+            std::cout << "R for ROOK, K for KNIGHT, B for BISHOP, Q for QUEEN" << std::endl;
+            getInput(origin);
+            if (origin == "R" || origin == "r") {
+                /* code */
+            } else if (origin == "K" || origin == "k") {
+                /* code */
+            } else if (origin == "B" || origin == "b") {
+                /* code */
+            } else if (origin == "Q" || origin == "Q") {
+                /* code */
+            } else {
+                std::cout << "Unavailable select: You can only choose R, K, B, or Q" << std::endl;
+            }
+        }
 
         if (playerSelect)
             std::cout << "Please select your own game piece" << std::endl;
@@ -61,12 +82,13 @@ int main(int argc, char* argv []) {
         getInput(origin);
         if (origin == "UNDO")
             continue;
-        
+
         Coordinates o = AddresstoIndex(origin);
 
-        if ((White && Board[o.first][o.second].identity <= 0) || (!White && Board[o.first][o.second].identity >= 0)) { 
+        if ((White && Board[o.first][o.second].identity <= 0)
+            || (!White && Board[o.first][o.second].identity >= 0)) {
             playerSelect = true;
-            continue; 
+            continue;
         }
 
         playerSelect = false;
