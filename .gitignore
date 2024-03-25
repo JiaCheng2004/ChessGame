@@ -2,3 +2,4 @@ test/
 build/
 .vscode
 .DS_Store
+.clang-format
