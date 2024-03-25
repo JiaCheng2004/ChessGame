@@ -54,6 +54,7 @@ int main(int argc, char* argv []) {
     while (Game) {
         std::cout << CLEAR_SCREEN;
         printBoard(Board);
+
         if (playerSelect)
             std::cout << "Please select your own game piece" << std::endl;
 
@@ -90,7 +91,7 @@ int main(int argc, char* argv []) {
             if (!existCoordinate(availableMoves, d))
                 continue;
 
-            navigatePiece(Board, origin, destination);
+            navigatePiece(Board, o, d);
             unhighlight(Board, availableMoves);
             White = !White;
             break;

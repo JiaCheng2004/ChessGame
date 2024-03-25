@@ -18,6 +18,7 @@
 #include <map>
 #include <iomanip>
 #include <sstream>
+#include <utility>
 
 // Private Library:
 #include "colors.h"
@@ -111,7 +112,7 @@ void unhighlight(Chessboard& board, Moves moves);
 
 bool existCoordinate(Moves& moves, const Coordinates location);
 
-void navigatePiece(Chessboard& Board, std::string Origin, std::string Destination);
+void navigatePiece(Chessboard& Board, Coordinates Origin, Coordinates Destination);
 
 // Check if the input is inboard
 bool inBound(int x);
