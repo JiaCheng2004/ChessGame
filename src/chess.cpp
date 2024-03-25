@@ -126,7 +126,6 @@ Moves getAvailableMoves(Chessboard& Board, Movemaps& Map, std::string Square) {
     int x = location.first;
     int y = location.second;
     ChessPiece piece = Board[x][y];
-    printChessPiece(piece);
     Moves availableMoves;
 
     if ( piece.weight == PAWN ) {
@@ -434,11 +433,9 @@ bool existCoordinate(Moves& moves, const Coordinates location) {
     return false;
 }
 
-void navigatePiece(Chessboard& Board, std::string Origin, std::string Destination) {
-    Coordinates O = AddresstoIndex(Origin);
-    Coordinates D = AddresstoIndex(Destination);
-    ChessPiece& o = Board[O.first][O.second];
-    ChessPiece& d = Board[D.first][D.second];
+void navigatePiece(Chessboard& Board, Coordinates Origin, Coordinates Destination) {
+    ChessPiece& o = Board[Origin.first][Origin.second];
+    ChessPiece& d = Board[Destination.first][Destination.second];
     
     if (d.identity == EMPTY || haveOppositeSign(o.identity, d.identity)) {
         o.moved = true;
@@ -447,15 +444,15 @@ void navigatePiece(Chessboard& Board, std::string Origin, std::string Destinatio
     } else {
         o.moved = true;
         d.moved = true;
-        if (Destination[0] == 'A') {
-            Board[O.first][O.second - 2] = o;
+        if (Destination.second == 0) {
+            Board[Origin.first][Origin.second - 2] = o;
             o = {EMPTY, EMPTY, C_EMPTY, false};
-            Board[D.first][D.second + 3] = d;
+            Board[Destination.first][Destination.second + 3] = d;
             d = {EMPTY, EMPTY, C_EMPTY, false};
         } else {
-            Board[O.first][O.second + 2] = o;
+            Board[Origin.first][Origin.second + 2] = o;
             o = {EMPTY, EMPTY, C_EMPTY, false};
-            Board[D.first][D.second - 2] = d;
+            Board[Destination.first][Destination.second - 2] = d;
             d = {EMPTY, EMPTY, C_EMPTY, false};
         }
     }
