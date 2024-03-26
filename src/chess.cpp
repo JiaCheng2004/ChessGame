@@ -352,8 +352,25 @@ bool isChecked(Chessboard &board, Movemaps Map, bool White) {
 
 // incomplete
 bool isCheckmated(Chessboard &board, Movemaps Map, bool White) {
-    Coordinates pos = White ? findPiece(board, KING)[0] : findPiece(board, -KING)[0];
+    //Check if currently is isChecked.
+    if (!isChecked(board, Map, White)) {
+        return false;
+    }
+    
+    //Check next move for every pieces
     Moves OpponentPieces = White ? findAllPieces(board, -KING) : findAllPieces(board, KING);
+    for (Coordinates &opponent : OpponentPieces) {
+            Moves opponentMoves = getAvailableMoves(board, Map, IndextoAddress(opponent));
+            for (Coordinates &move : opponentMoves) {
+                Chessboard tempBoard = board;
+                //move one time of every available move
+                navigatePiece(tempBoard, opponent, move);
+                // if there have one of available move is not been Checked, then it is not checkmate.
+                if (!isChecked(tempBoard, Map, White)) {
+                    return false;
+                }
+            }
+        }
     return true;
 }
 

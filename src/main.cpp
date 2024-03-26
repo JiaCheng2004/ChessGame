@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
         //     }
         // }
 
-        // check if one of the KING is been eaten
+        // check if the game is done
         if (isCheckmated(Board, Map, White)) {
             Game = false;
             break;
