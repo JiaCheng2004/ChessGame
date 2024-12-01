@@ -353,24 +353,24 @@ bool isChecked(Chessboard &board, Movemaps Map, bool White) {
 // incomplete
 bool isCheckmated(Chessboard &board, Movemaps Map, bool White) {
     //Check if currently is isChecked.
-    if (!isChecked(board, Map, White)) {
+    if (!isChecked(board, Map, White))
         return false;
-    }
-    
+
     //Check next move for every pieces
-    Moves OpponentPieces = White ? findAllPieces(board, -KING) : findAllPieces(board, KING);
-    for (Coordinates &opponent : OpponentPieces) {
-            Moves opponentMoves = getAvailableMoves(board, Map, IndextoAddress(opponent));
-            for (Coordinates &move : opponentMoves) {
-                Chessboard tempBoard = board;
-                //move one time of every available move
-                navigatePiece(tempBoard, opponent, move);
-                // if there have one of available move is not been Checked, then it is not checkmate.
-                if (!isChecked(tempBoard, Map, White)) {
-                    return false;
-                }
+    Moves allPieces = White ? findAllPieces(board, KING) : findAllPieces(board, -KING);
+    for (Coordinates &origin : allPieces) {
+        Moves allMoves = getAvailableMoves(board, Map, IndextoAddress(origin));
+        for (Coordinates &destination : allMoves) {
+            //move one time of every available move
+            navigatePiece(board, origin, destination);
+            // if there have one of available move is not been Checked, then it is not checkmate.
+            if (!isChecked(board, Map, White)) {
+                // no matter is checked or not checked, move the step back
+                navigatePiece(board, destination, origin);
+                return false;
             }
         }
+    }
     return true;
 }
 
@@ -422,14 +422,12 @@ void navigatePiece(Chessboard &Board, Coordinates Origin, Coordinates Destinatio
 
     //When the pawn touch the wall, then PAWN change to QUEEN
     // if (o.identity == PAWN) {
-    //     if (Destination.second == 7) {
+    //     if (Destination.second == 7)
     //         o.identity == QUEEN;
-    //     }
 
     // } else if (o.identity == -PAWN) {
-    //     if (Destination.second == 0) {
+    //     if (Destination.second == 0)
     //         o.identity == -QUEEN;
-    //     }
     // }
 
     if (d.identity == EMPTY || haveOppositeSign(o.identity, d.identity)) {
@@ -504,6 +502,7 @@ void printMoves(const Moves &moves) {
         std::cout << " \"" << IndextoAddress(move) << "\"";
     }
     std::cout << " ]" << std::endl;
+    std::cout << "Type [undo] to undo previous step" << std::endl;
 }
 
 void printChessPiece(const ChessPiece &piece) {

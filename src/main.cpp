@@ -45,16 +45,48 @@ int main(int argc, char *argv[]) {
         printBoard(Board);
         std::cout << "Please select your piece by [A-H][1-8]. Ex: a1, b2, A1, B2" << std::endl;
 
-        //Problem: 当有棋子挡路时，仍然会显示 "CHECK"
-        Coordinates B_kingpos = findPiece(Board, -KING)[0];
+        //Problem: 当有棋子挡路时，对方king仍是红色（正常情况应该变回原色）, 对方king可以变色，但己方king不行
+        Coordinates B_kingpos = findPiece(Board, -KING)[0]; // black king, opponent king, up side king
+        Coordinates W_kingpos = findPiece(Board, KING)[0]; // white king, your king, bottom side king
 
-        if (isChecked(Board, Map, White)) {
-            Board[B_kingpos.first][B_kingpos.second].exhibit = BOLD(FRED(C_KING));
-            std::cout << CLEAR_SCREEN;
-            printBoard(Board);
-            std::cout << "Please select your piece by [A-H][1-8]. Ex: a1, b2, A1, B2" << std::endl;
-            std::cout << "CHECK" << std::endl;
+        // Check if one of the kings is gone, then the game is over.
+        // if () {
+        //     std::cout << "Game over!!!" << std::endl;
+        //     if (White) {
+        //         std::cout << "White win!!!" << std::endl;
+        //     } else {
+        //         std::cout << "Black win!!!" << std::endl;
+        //     }
+
+        //     Game = false;
+        // }
+
+        // incomplete
+        std::cout << "现在是" << (White ? "white" : "black") << std::endl;
+        std::cout << (isChecked(Board, Map, White) ? "Ch_White: Yes" : "Ch_White: No") << std::endl;
+        std::cout << (isChecked(Board, Map, !White) ? "Ch_Black: Yes" : "Ch_Black: No") << std::endl;
+        
+        if (isChecked(Board, Map, White)) { //white side turn
+            std::cout << "黑色被警告" << std::endl;
+        } else if (isChecked(Board, Map, !White)) { //black side turn
+            std::cout << "白色被警告" << std::endl;
         }
+
+        // if ((isChecked(Board, Map, White)) || (isChecked(Board, Map, !White))) {
+        //     if (!White){
+        //         Board[B_kingpos.first][B_kingpos.second].exhibit = BOLD(FRED(C_KING));
+        //         std::cout << CLEAR_SCREEN;
+        //         printBoard(Board);
+        //         std::cout << "Please select your piece by [A-H][1-8]. Ex: a1, b2, A1, B2" << std::endl;
+        //         std::cout << "CHECK by White" << std::endl;
+        //     }else{
+        //         Board[W_kingpos.first][W_kingpos.second].exhibit = BOLD(FRED(C_KING));
+        //         std::cout << CLEAR_SCREEN;
+        //         printBoard(Board);
+        //         std::cout << "Please select your piece by [A-H][1-8]. Ex: a1, b2, A1, B2" << std::endl;
+        //         std::cout << "CHECK by Black" << std::endl;
+        //     }
+        // }
 
         //PAWN Promotion
         // findPiece(Board, PAWN);
@@ -78,10 +110,10 @@ int main(int argc, char *argv[]) {
         // }
 
         // check if the game is done
-        if (isCheckmated(Board, Map, White)) {
-            Game = false;
-            break;
-        }
+        // if (isCheckmated(Board, Map, White)) {
+        //     Game = false;
+        //     break;
+        // }
 
         if (playerSelect)
             std::cout << "Please select your own game piece" << std::endl;
@@ -130,7 +162,7 @@ int main(int argc, char *argv[]) {
     //print the ending message of the game
     if (Game == false) {
         std::cout << "Game Over" << std::endl;
-        if (true) {
+        if (White) {
             std::cout << "YOU WIN" << std::endl;
         } else {
             std::cout << "YOU LOST" << std::endl;
